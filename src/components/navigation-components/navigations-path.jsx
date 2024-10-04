@@ -8,10 +8,10 @@ import ThemesComponent from "../multimedia-components/themes-component";
 import LiveComponent from "../multimedia-components/live-component";
 import MainProfileComponent from "../multimedia-components/main-propfile-component";
 import SingInComponent from "../../ui-component/sign-In-component";
-import SignUPComponent from "../../ui-component/sing-Up-component";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SingUPHandler } from "../../api-sercers-toolkit/singupslice";
+import SignUPComponent from "../../ui-component/singup-component";
 
 const NavigationComponent = () => {
   const dispatch = useDispatch();

@@ -22,8 +22,6 @@ const SignUPComponent = () => {
   const navigation = useNavigate();
   const { singUpLoading } = useSelector((state) => state.signUpData);
 
-  
-
   const [userDetails, setDetails] = useState({
     name: "",
     email: "",
@@ -126,7 +124,7 @@ const SignUPComponent = () => {
   };
 
   const verifyHandler = () => {
-    if (otp == userDetails.Otp) {
+    if (otp === userDetails.Otp) {
       toast.success("OTP verified successfully.");
     } else {
       toast.error("OTP verification failed.");
@@ -150,96 +148,96 @@ const SignUPComponent = () => {
         margin: "0",
       }}
     >
-<form className="Sign-Up">
-  <div className="input-container">
-    <div>
-    <FaUser />
-    <input
-      type="text"
-      placeholder="Enter Name"
-      name="name"
-      value={userDetails.name}
-      onChange={onchangeHandler}
-      autoComplete="name"
-    />
-    </div>
-  </div>
+      <form className="Sign-Up">
+        <div className="input-container">
+          <div>
+            <FaUser />
+            <input
+              type="text"
+              placeholder="Enter Name"
+              name="name"
+              value={userDetails.name}
+              onChange={onchangeHandler}
+              autoComplete="name"
+            />
+          </div>
+        </div>
 
-  <div className="input-container">
-    <div>
-    <MdEmail />
-    <input
-      type="email"
-      name="email"
-      value={userDetails.email}
-      placeholder="Enter Email"
-      onChange={onchangeHandler}
-      autoComplete="email"
-    />
-    </div>
-    {errorForm.email && <div style={{ color: "red" }}>{errorForm.email}</div>}
-  </div>
+        <div className="input-container">
+          <div>
+            <MdEmail />
+            <input
+              type="email"
+              name="email"
+              value={userDetails.email}
+              placeholder="Enter Email"
+              onChange={onchangeHandler}
+              autoComplete="email"
+            />
+          </div>
+          {errorForm.email && <div style={{ color: "red" }}>{errorForm.email}</div>}
+        </div>
 
-  <div className="input-container">
-    <div>
-    <RiLockPasswordFill />
-    <input
-      type="password"
-      name="password"
-      value={userDetails.password}
-      placeholder="Enter Password"
-      onChange={onchangeHandler}
-      autoComplete="password"
-    />
-    </div>
-    {errorForm.password && (
-      <div style={{ color: "red" }}>{errorForm.password}</div>
-    )}
-  </div>
+        <div className="input-container">
+          <div>
+            <RiLockPasswordFill />
+            <input
+              type="password"
+              name="password"
+              value={userDetails.password}
+              placeholder="Enter Password"
+              onChange={onchangeHandler}
+              autoComplete="password"
+            />
+          </div>
+          {errorForm.password && (
+            <div style={{ color: "red" }}>{errorForm.password}</div>
+          )}
+        </div>
 
-  <div className="input-container">
-    <div>
-    <RiPhoneFill />
-    <input
-      type="number"
-      name="number"
-      value={userDetails.number}
-      placeholder="Enter Number"
-      onChange={onchangeHandler}
-      autoComplete="number"
-    />
-    </div>
-    {errorForm.number && (
-      <div style={{ color: "red" }}>{errorForm.number}</div>
-    )}
-  </div>
+        <div className="input-container">
+          <div>
+            <RiPhoneFill />
+            <input
+              type="number"
+              name="number"
+              value={userDetails.number}
+              placeholder="Enter Number"
+              onChange={onchangeHandler}
+              autoComplete="number"
+            />
+          </div>
+          {errorForm.number && (
+            <div style={{ color: "red" }}>{errorForm.number}</div>
+          )}
+        </div>
 
-  <div className="input-container">
-    <div>
-    <RiKey2Line />
-    <input type="text" value={otp} disabled placeholder="Generate OTP" />
-    </div>
-  </div>
+        <div className="input-container">
+          <div>
+            <RiKey2Line />
+            <input type="text" value={otp} readOnly placeholder="Generate OTP" />
+          </div>
+        </div>
 
-  <div className="input-container">
-    <div>
-    <AiOutlineSend />
-    <input
-      type="text"
-      name="Otp"
-      value={userDetails.Otp}
-      placeholder="Enter the OTP"
-      onChange={onchangeHandler}
-    />
-    </div>
-  </div>
+        <div className="input-container">
+          <div>
+            <AiOutlineSend />
+            <input
+              type="text"
+              name="Otp"
+              value={userDetails.Otp}
+              placeholder="Enter the OTP"
+              onChange={onchangeHandler}
+            />
+          </div>
+        </div>
 
-  <div>
-    <Button onClick={otp ? verifyHandler : generateOtpHandler}>
-      {otp ? "Verify OTP" : "Generate OTP"}
-    </Button>
-  </div>
-</form>
+        <div>
+          <Button onClick={otp ? verifyHandler : generateOtpHandler}>
+            {otp ? "Verify OTP" : "Generate OTP"}
+          </Button>
+        </div>
+      </form>
 
       <ToastContainer />
     </Modal>
