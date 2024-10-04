@@ -40,7 +40,7 @@ const navigation=useNavigate()
 
   const userFetch = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/userDetails");
+      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
       const userDetails = response.data;
       const user = userDetails.find((each) => each.email === email);
       setUserData(user);
@@ -63,7 +63,7 @@ const navigation=useNavigate()
 
   const postProfile = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/userDetails");
+      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
       const userDetails = response.data;
       const userIndex = userDetails.findIndex((each) => each.email === email);
       if (userIndex !== -1) {
@@ -73,7 +73,7 @@ const navigation=useNavigate()
         };
 
         await axios.put(
-          `http://localhost:5000/userDetails/${userDetails[userIndex].id}`,
+          `https://streamora-userdata.onrender.com/userDetails/${userDetails[userIndex].id}`,
           updatedUser
         );
       }
@@ -106,7 +106,7 @@ const navigation=useNavigate()
       const delateIndex = userDetails.findIndex((each) => each.email === email);
       
       if (delateIndex !== -1) {
-        await axios.delete(`http://localhost:5000/userDetails/${userDetails[delateIndex].id}`);
+        await axios.delete(`https://streamora-userdata.onrender.com/userDetails/${userDetails[delateIndex].id}`);
         localStorage.clear()
         window.location.reload()
       } else {

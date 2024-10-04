@@ -82,7 +82,7 @@ const UploadComponent = () => {
 
   const videoUrlPost = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/userDetails");
+      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
       const userDetails = response.data;
 
       const findIndex = userDetails.findIndex((each) => each.email === email);
@@ -95,7 +95,7 @@ const UploadComponent = () => {
         };
 
         await axios.patch(
-          `http://localhost:5000/userDetails/${userDetails[findIndex].id}`,
+          `https://streamora-userdata.onrender.com/userDetails/${userDetails[findIndex].id}`,
           updatedUser
         );
       }
@@ -124,7 +124,7 @@ const UploadComponent = () => {
 
   const imageUrlPost = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/userDetails");
+      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
       const userDetails = response.data;
 
       const findIndex = userDetails.findIndex((each) => each.email === email);
@@ -137,7 +137,7 @@ const UploadComponent = () => {
         };
 
         await axios.patch(
-          `http://localhost:5000/userDetails/${userDetails[findIndex].id}`,
+          `https://streamora-userdata.onrender.com/userDetails/${userDetails[findIndex].id}`,
           updatedUser
         );
 

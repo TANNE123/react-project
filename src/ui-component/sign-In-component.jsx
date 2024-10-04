@@ -18,7 +18,7 @@ const SingInComponent = () => {
     e.preventDefault();
 
     try {
-      const { data } = await axios.get("http://localhost:5000/userDetails");
+      const { data } = await axios.get("https://streamora-userdata.onrender.com/userDetails");
 
       const user = data.find((user) => user.email === userData.email);
 
