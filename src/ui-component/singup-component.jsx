@@ -42,14 +42,13 @@ const SignUPComponent = () => {
     ) {
       try {
         const response = await axios.get(
-          `https://streamora-userdata.onrender.com/userDetails?email=${userDetails.email}`
+          `https://server-streamora.onrender.com/api/streamora/user/?email=${userDetails.email}`
         );
 
-        if (response.data.length > 0) {
+        if (response.data.data.users.length > 0) {
           notifyError("User already registered with this email.");
         } else {
-          await axios.post("https://streamora-userdata.onrender.com/userDetails", {
-            id: Date.now().toString(),
+          await axios.post("https://server-streamora.onrender.com/api/streamora/user/", {
             profile_url: "",
             name: userDetails.name,
             email: userDetails.email,

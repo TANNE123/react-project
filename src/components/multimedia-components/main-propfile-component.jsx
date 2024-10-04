@@ -15,65 +15,82 @@ const MainProfileComponent = () => {
   const fileInputRef = useRef(null);
   const [profileImage, setProfileImage] = useState("");
   const dispatch = useDispatch();
-const navigation=useNavigate()
+  const navigate = useNavigate(); // Typo corrected from "navigation" to "navigate"
+  
+  const { userDetails } = useSelector((state) => state.userDetailsData);
 
-  const {userDetails}=useSelector((state)=>state.userDetailsData)
- 
+
+
+  useEffect(()=>{
+    const a=async()=>{
+      const response=await axios.get("https://server-streamora.onrender.com/api/streamora/user/")
+     console.log(response.data.data.users);
+     
+      
+    }
+    a()
+  },[])
 
   useEffect(() => {
-    userFetch();
+    userFetch(); // Call to fetch user data
     const fetchUserData = async () => {
       const responseData = await fetchData();
       if (responseData) {
         const checkingData = responseData.find((each) => each.email === email);
-        setVideos(checkingData?.videos); 
-        setImages(checkingData?.images); 
+        setVideos(checkingData?.videos || []);  // Use the `videos` state variable
+        setImages(checkingData?.images || []);  // Use the `images` state variable
       } else {
-        console.log("Failed to fetch data.");
+        console.error("Failed to fetch data.");
       }
     };
     fetchUserData();
-    if(dispatch){
-        dispatch(fetchPromises())
+    if (dispatch) {
+      dispatch(fetchPromises());
     }
-  }, [dispatch]);
+  }, [dispatch, email]); // Added email as a dependency
 
   const userFetch = async () => {
     try {
-      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
-      const userDetails = response.data;
+      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+      
+      console.log(response.data.data);
+      const userDetails = response.data.data.users;
+
+     
+      
       const user = userDetails.find((each) => each.email === email);
       setUserData(user);
       if (user) {
         setProfileImage(user.profile_url);
       }
     } catch (err) {
-      console.error("Error fetching user data:", err);
+      console.error("Error fetching user data:", err); // More descriptive error
     }
   };
 
   useEffect(() => {
     if (profileImage) {
       postProfile();
+      dispatch(profileHandler(profileImage));  // Dispatch after image update
     }
-    if (profileImage) {
-      dispatch(profileHandler(profileImage));
-    }
-  }, [profileImage]);
+  }, [profileImage, dispatch]);
 
   const postProfile = async () => {
     try {
-      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
-      const userDetails = response.data;
+      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+      const userDetails = response.data.data.users;
+      
       const userIndex = userDetails.findIndex((each) => each.email === email);
+      
+      
       if (userIndex !== -1) {
         const updatedUser = {
           ...userDetails[userIndex],
           profile_url: profileImage,
         };
 
-        await axios.put(
-          `https://streamora-userdata.onrender.com/userDetails/${userDetails[userIndex].id}`,
+        await axios.patch(
+          `https://server-streamora.onrender.com/api/streamora/user/${userDetails[userIndex].id}`,
           updatedUser
         );
       }
@@ -99,29 +116,26 @@ const navigation=useNavigate()
     }
   };
 
-
-
-  const delateHandler = async () => {
+  const deleteHandler = async () => { // Typo corrected from "delateHandler"
     try {
-      const delateIndex = userDetails.findIndex((each) => each.email === email);
-      
-      if (delateIndex !== -1) {
-        await axios.delete(`https://streamora-userdata.onrender.com/userDetails/${userDetails[delateIndex].id}`);
-        localStorage.clear()
-        window.location.reload()
+      const deleteIndex = userDetails.findIndex((each) => each.email === email);
+      if (deleteIndex !== -1) {
+        await axios.delete(`https://server-streamora.onrender.com/api/streamora/user/${userDetails[deleteIndex].id}`);
+        localStorage.clear();
+        window.location.reload();
       } else {
-        notifyError("account not found")
+        notifyError("Account not found");
       }
     } catch (err) {
-      console.log("Error deleting user account:", err);
+      console.error("Error deleting user account:", err);
     }
   };
-  
 
-  const logOutHandler=()=>{
-    window.localStorage.clear()
-    navigation("/LogIn")
-  }
+  const logOutHandler = () => {
+    localStorage.clear(); // Use localStorage in lowercase
+    navigate("/LogIn"); // Corrected navigation function
+  };
+
   return (
     <>
       <div className="profile-data">
@@ -129,7 +143,7 @@ const navigation=useNavigate()
           <div>
             <img
               src={profileImage || userData?.profile_url || ""}
-              alt=""
+              alt="Profile"
               onClick={handleImageClick}
               style={{ cursor: "pointer", width: "100px", height: "100px" }}
             />
@@ -140,22 +154,21 @@ const navigation=useNavigate()
               onChange={handleFileChange}
               accept="image/*"
             />
-            
           </div>
           <div>{userData ? userData.name : "Loading..."}</div>
-         <Button onClick={delateHandler}>Delate account</Button>
-         <Button onClick={logOutHandler}>Log out</Button>
+          <Button onClick={deleteHandler}>Delete account</Button>
+          <Button onClick={logOutHandler}>Log out</Button>
         </div>
         <hr />
         
         <div className="post-div">
-          <div>Videos: {userData ? userData.videos.length : 0}</div>
-          <div>Images: {userData ? userData.images.length : 0}</div>
+          <div>Videos: {videos.length}</div> {/* Consistent use of videos state */}
+          <div>Images: {images.length}</div> {/* Consistent use of images state */}
         </div>
 
         <div className="post-div-video-image">
           <div className="video-div">
-            {videos?.length > 0 ? (
+            {videos.length > 0 ? (
               videos.map((eachVideo, i) => (
                 <div key={i}>
                   {eachVideo.videoUrl ? (
@@ -168,13 +181,12 @@ const navigation=useNavigate()
                 </div>
               ))
             ) : (
-              <div>No videos available</div>      
-              
+              <div>No videos available</div>
             )}
           </div>
 
           <div className="image-div">
-            {images?.length > 0 ? (
+            {images.length > 0 ? (
               images.map((eachImage, i) => (
                 <div key={i}>
                   {eachImage.imageUrl ? (
