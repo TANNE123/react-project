@@ -4,11 +4,12 @@ const FavoriteSlice = createSlice({
   name: "FavoriteSlice",
   initialState: {
     cards: [null],
-    profileClose:false,
+    profile:false,
   },
 
   reducers: {
     profileClose:(state,action)=>{
+      
       return {profileClose:action.payload}
     },
     addFavorite: (state, action) => {

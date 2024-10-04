@@ -6,7 +6,7 @@ const FavoritesComponent = () => {
   return (
     <>
       <div className="favorites-card">
-        {cards.map((each, i) => (
+        {cards?.map((each, i) => (
           <video key={i} controls src={each} />
         ))}
       </div>

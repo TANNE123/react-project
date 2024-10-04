@@ -8,14 +8,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { profileClose } from "../../api-sercers-toolkit/favoritesslice";
 
 
-const ProfileComponent = () => {
-  const { profileClose } = useSelector((state) => state.favoritesData);
 
+const ProfileComponent = () => {
+  const { profile } = useSelector((state) => state.favoritesData);
   const dispatch=useDispatch()
 
 
 const handleSignUpClick=()=>{
-  dispatch(profileClose(!profileClose));
+  dispatch(profileClose(!profile));
 }
   return (
     <div className="profile-details">

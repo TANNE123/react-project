@@ -16,7 +16,6 @@ const MainProfileComponent = () => {
   const [profileImage, setProfileImage] = useState("");
   const dispatch = useDispatch();
 const navigation=useNavigate()
-const [rajesh,setRajesh]=useState([])
 
   const {userDetails}=useSelector((state)=>state.userDetailsData)
  
@@ -25,7 +24,6 @@ const [rajesh,setRajesh]=useState([])
     userFetch();
     const fetchUserData = async () => {
       const responseData = await fetchData();
-      setRajesh(responseData)
       if (responseData) {
         const checkingData = responseData.find((each) => each.email === email);
         setVideos(checkingData?.videos); 
@@ -42,7 +40,8 @@ const [rajesh,setRajesh]=useState([])
 
   const userFetch = async () => {
     try {
-      const userDetails =rajesh;
+      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
+      const userDetails = response.data;
       const user = userDetails.find((each) => each.email === email);
       setUserData(user);
       if (user) {
@@ -64,8 +63,8 @@ const [rajesh,setRajesh]=useState([])
 
   const postProfile = async () => {
     try {
-
-      const userDetails = rajesh;
+      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
+      const userDetails = response.data;
       const userIndex = userDetails.findIndex((each) => each.email === email);
       if (userIndex !== -1) {
         const updatedUser = {
