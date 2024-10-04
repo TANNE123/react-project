@@ -1,0 +1,200 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.header {
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  border: 1px solid;
+  /* padding: 0 10px 0 5px; */
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .NavLink {
+    margin-left: 40px;
+  }
+  .menu-button {
+    margin-left: 100px;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
+    padding: 30px 0 0 0;
+  }
+  input {
+    font-size: 20px;
+  }
+}
+
+.logo {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.menu-toggle {
+  color: black;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Sidebar */
+.ant-layout-sider {
+  background-color: #fff;
+  padding-top: 64px;
+  width: 250px;
+  transition: all 0.3s ease-in-out;
+  /* border: 10px solid pink; */
+}
+
+.said-nav-bar {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  font-size: 18px;
+  padding: 20px;
+  /* border: 1px solid green; */
+
+}
+
+.said-nav-bar div {
+  padding: 15px 0;
+  width: 110px;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  /* border: 1px solid red; */
+
+  
+}
+
+.said-nav-bar div label {
+  padding-left: 10px;
+  font-size: 20px;
+
+}
+
+.said-nav-bar div .active {
+  color: red;
+}
+.upload-nav{
+  font-size: 20px;
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
+}
+
+/* Content Area */
+.Main-Content-Area {
+  overflow-y: scroll;
+  height: 670px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  border: 1px solid red;
+}
+
+/* Media Queries */
+
+/* Mobile view (width <= 576px) */
+@media only screen and (max-width: 576px) {
+  .header {
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .NavLink {
+      margin-left: 0px;
+    }
+    .menu-button {
+      margin-left: 20px;
+    }
+  }
+  
+  .said-nav-bar {
+    padding: 10px;
+  
+  }
+
+  .said-nav-bar div {
+    justify-content: left;
+    align-items: left;
+    /* border: 1px solid red; */
+  
+    
+  }
+
+  .ant-layout-sider {
+    display: none; 
+    width: 100vw;
+  }
+
+  .ant-layout-sider.open {
+    display: block;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    background-color: #fff;
+  }
+}
+
+/* Profile Bar Styling */
+.profile-bar {
+  position: fixed;
+  top: 64px;
+  right: 0;
+  width: 250px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  z-index: 2;
+}
+.profile-div {
+  font-size: 20px;
+  label {
+    font-size: 20px;
+    padding: 10px;
+  }
+}
+
+/* For tablets */
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+    input {
+      font-size: 15px;
+    }
+  }
+
+  .ant-layout-sider {
+    width: 200px; 
+  }
+}
+
+/* For laptops and desktops */
+@media only screen and (min-width: 768px) {
+  .header {
+    padding: 0 24px;
+  }
+
+  .ant-layout-sider {
+    width: 250px;
+  }
+}
