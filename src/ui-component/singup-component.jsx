@@ -124,7 +124,7 @@ const SignUPComponent = () => {
   };
 
   const verifyHandler = () => {
-    if (otp === userDetails.Otp) {
+    if (otp == userDetails.Otp) {
       toast.success("OTP verified successfully.");
     } else {
       toast.error("OTP verification failed.");
