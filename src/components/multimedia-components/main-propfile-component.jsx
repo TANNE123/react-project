@@ -24,9 +24,7 @@ const MainProfileComponent = () => {
   useEffect(()=>{
     const a=async()=>{
       const response=await axios.get("https://server-streamora.onrender.com/api/streamora/user/")
-     console.log(response.data.data.users);
-     
-      
+      console.log(response)
     }
     a()
   },[])
@@ -53,7 +51,6 @@ const MainProfileComponent = () => {
     try {
       const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
       
-      console.log(response.data.data);
       const userDetails = response.data.data.users;
 
      

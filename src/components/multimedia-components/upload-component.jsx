@@ -6,7 +6,7 @@ import { uploadFiles } from "../../api-sercers-toolkit/modalslice";
 import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { notify } from "../js-handlers/reguler-expression";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const UploadComponent = () => {
@@ -31,16 +31,14 @@ const UploadComponent = () => {
 
   const { email } = JSON.parse(localStorage.getItem("userDetails")) || {};
 
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit for files
-
   useEffect(() => {
-    if (videoUpload.video_url) {
+    if (videoUpload.video_url) { 
       videoUrlPost();
     }
   }, [videoUpload]);
 
   useEffect(() => {
-    if (imageUpload.image_url) {
+    if (imageUpload.image_url) { 
       imageUrlPost();
     }
   }, [imageUpload]);
@@ -66,11 +64,6 @@ const UploadComponent = () => {
   const onVideoFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error("File size exceeds the limit of 10MB.");
-        return;
-      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setVideoUpload((prevState) => ({
@@ -96,13 +89,20 @@ const UploadComponent = () => {
           videos: updatedVideos,
         };
 
-        await axios.patch(
-          `https://server-streamora.onrender.com/api/streamora/user/${userDetails[findIndex].id}`,
+        // Debugging logs
+        console.log("Patching user ID:", userDetails[findIndex]._id);
+        console.log("User data to patch:", updatedUser);
+
+        const patchResponse = await axios.patch(
+          `https://server-streamora.onrender.com/api/streamora/user/${userDetails[findIndex]._id}`,
           updatedUser
         );
+
+        // Log patch response
+        console.log("Patch response:", patchResponse.data);
       }
     } catch (err) {
-      console.error("Error uploading video:", err);
+      console.error("Error uploading video:", err.response ? err.response.data : err.message);
     }
   };
 
@@ -113,11 +113,6 @@ const UploadComponent = () => {
   const onImageFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error("File size exceeds the limit of 10MB.");
-        return;
-      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageUpload((prevState) => ({
@@ -132,7 +127,7 @@ const UploadComponent = () => {
   const imageUrlPost = async () => {
     try {
       const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
-      const userDetails = response.data;
+      const userDetails = response.data.data.users;
 
       const findIndex = userDetails.findIndex((each) => each.email === email);
 
@@ -143,13 +138,20 @@ const UploadComponent = () => {
           images: updatedImages,
         };
 
-        await axios.patch(
-          `https://server-streamora.onrender.com/api/streamora/user/${userDetails[findIndex].id}`,
+        // Debugging logs
+        console.log("Patching user ID:", userDetails[findIndex]._id);
+        console.log("User data to patch:", updatedUser);
+
+        const patchResponse = await axios.patch(
+          `https://server-streamora.onrender.com/api/streamora/user/${userDetails[findIndex]._id}`,
           updatedUser
         );
+
+        // Log patch response
+        console.log("Patch response:", patchResponse.data);
       }
     } catch (err) {
-      console.error("Error uploading image:", err);
+      console.error("Error uploading image:", err.response ? err.response.data : err.message);
     }
   };
 
