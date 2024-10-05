@@ -2,22 +2,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchPromises = createAsyncThunk("fakeStore", async () => {
-  const finalData = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
-
+  const finalData = await axios.get("https://server-streamora-1.onrender.com/api/streamora/user");
+  
   return finalData.data.data.users;
 });
 
 const productSlice = createSlice({
   name: "userDetails/slice",
   initialState: {
-    userDetails: [],
+    userData: [],
     error: null,
     loading: true,
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPromises.fulfilled, (state, action) => {
-        return { ...state, userDetails: action.payload, loading: false };
+        return { ...state, userData: action.payload, loading: false };
       })
 
       .addCase(fetchPromises.pending, (state) => {

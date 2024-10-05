@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button } from "antd";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill, RiPhoneFill } from "react-icons/ri";
@@ -6,7 +6,7 @@ import { FaUser } from "react-icons/fa";
 import { RiKey2Line } from "react-icons/ri";
 import { AiOutlineSend } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   EmailValidation,
   notify,
@@ -17,10 +17,14 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { fetchPromises } from "../api-sercers-toolkit/apiSlice";
 
 const SignUPComponent = () => {
   const navigation = useNavigate();
   const { singUpLoading } = useSelector((state) => state.signUpData);
+
+  const {userData}=useSelector((state)=>state.userDetailsData)
+  const dispatch=useDispatch()
 
   const [userDetails, setDetails] = useState({
     name: "",
@@ -33,6 +37,14 @@ const SignUPComponent = () => {
   const [errorForm, setErrorForm] = useState({});
   const [otp, SetOtp] = useState("");
 
+  useEffect(()=>{
+    if(dispatch){
+      dispatch(fetchPromises())
+    }
+  },[dispatch])
+  console.log(userData);
+  
+
   const handleOk = async () => {
     if (
       userDetails.name &&
@@ -41,11 +53,12 @@ const SignUPComponent = () => {
       userDetails.email
     ) {
       try {
-       
-        if (response.data.data.users.length > 0) {
+        const response = userData
+
+        if (response.length > 0) {
           notifyError("User already registered with this email.");
         } else {
-          await axios.post("https://server-streamora.onrender.com/api/streamora/user/", {
+          await axios.post("https://server-streamora.onrender.com/api/streamora/user/", { 
             profile_url: "",
             name: userDetails.name,
             email: userDetails.email,
