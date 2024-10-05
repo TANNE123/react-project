@@ -53,9 +53,10 @@ const SignUPComponent = () => {
       userDetails.email
     ) {
       try {
-        const response = userData
-
-        if (response.length > 0) {
+        const response = userData.find(each=>each.email ==userDetails.email)
+        console.log(response);
+        
+        if (response) {
           notifyError("User already registered with this email.");
         } else {
           await axios.post("https://server-streamora.onrender.com/api/streamora/user/", { 

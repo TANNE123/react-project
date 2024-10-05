@@ -15,28 +15,25 @@ const CardComponent = () => {
   const [isShareVisible, setIsShareVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [userProfileUrl, setUserProfileUrl] = useState({});
-  const { userDetails } = useSelector((state) => state.userDetailsData);
+  const {userData}=useSelector((state)=>state.userDetailsData)
   const { email } = JSON.parse(localStorage.getItem("userDetails"))|| {};
   const { ProfileChange } = useSelector((state) => state.profileData);
   const { cards } = useSelector((state) => state.favoritesData);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchUserProfileUrl();
-    dispatch(fetchPromises());
+          dispatch(fetchPromises());
+
   }, [ProfileChange, dispatch]);
 
-  const fetchUserProfileUrl = async () => {
-    try {
-      const userData = userDetails;
-      const urlData = userData.find((user) => user.email === email);
-      if (urlData) {
-        setUserProfileUrl(urlData);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+
+  const urlData = userData.find((user) => user.email === email);
+
+  setUserProfileUrl(urlData);
+
+  console.log(userProfileUrl);
+  
+
 
   const toggleLike = () => {
     setIsLike((prev) => !prev);
