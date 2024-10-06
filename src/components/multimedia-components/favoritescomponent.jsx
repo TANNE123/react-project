@@ -6,12 +6,18 @@ const FavoritesComponent = () => {
   return (
     <>
       <div className="favorites-card">
-        {cards?.map((each, i) => (
-          <video key={i} controls src={each} />
-        ))}
+        {cards && cards.length >0 ? (
+          cards.map((each, i) => (
+            each?<video key={i} controls src={each} />:''
+            
+          ))
+        ) : (
+          <p>No favorite videos found.</p>
+        )}
       </div>
     </>
   );
 };
 
 export default FavoritesComponent;
+
