@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchPromises } from "../api-sercers-toolkit/apiSlice";
 
 const VideoComponentCard = () => {
-  const { userDetails } = useSelector((state) => state.userDetailsData);
+  const { userData, loading } = useSelector((state) => state.userDetailsData);
   const dispatch = useDispatch();
 
   const videoRefs = useRef([]);
@@ -15,15 +15,15 @@ const VideoComponentCard = () => {
   let videoArr = [];
   let imageArr = [];
 
-  userDetails.forEach(each => {
+  userData.forEach(each => {
     if (each.videos) {
       each.videos.forEach(video => {
-        videoArr.push(video.videoUrl);
+        videoArr.push(video.video_url);
       });
     }
     if (each.images) {
       each.images.forEach(image => {
-        imageArr.push(image.imageUrl);
+        imageArr.push(image.image_url);
       });
     }
   });

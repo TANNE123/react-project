@@ -42,7 +42,6 @@ const SignUPComponent = () => {
       dispatch(fetchPromises())
     }
   },[dispatch])
-  console.log(userData);
   
 
   const handleOk = async () => {

@@ -15,28 +15,21 @@ const MainProfileComponent = () => {
   const fileInputRef = useRef(null);
   const [profileImage, setProfileImage] = useState("");
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Typo corrected from "navigation" to "navigate"
+  const navigate = useNavigate(); 
   
   const { userDetails } = useSelector((state) => state.userDetailsData);
 
+console.log(userDetails);
 
-
-  useEffect(()=>{
-    const a=async()=>{
-      const response=await axios.get("https://server-streamora.onrender.com/api/streamora/user/")
-      console.log(response)
-    }
-    a()
-  },[])
 
   useEffect(() => {
-    userFetch(); // Call to fetch user data
+    userFetch();
     const fetchUserData = async () => {
       const responseData = await fetchData();
       if (responseData) {
         const checkingData = responseData.find((each) => each.email === email);
-        setVideos(checkingData?.videos || []);  // Use the `videos` state variable
-        setImages(checkingData?.images || []);  // Use the `images` state variable
+        setVideos(checkingData?.videos || []);  
+        setImages(checkingData?.images || []); 
       } else {
         console.error("Failed to fetch data.");
       }
@@ -45,11 +38,14 @@ const MainProfileComponent = () => {
     if (dispatch) {
       dispatch(fetchPromises());
     }
-  }, [dispatch, email]); // Added email as a dependency
+  }, [dispatch, email]); 
+
+
+
 
   const userFetch = async () => {
     try {
-      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+      const response = await axios.get("https://server-streamora-1.onrender.com/api/streamora/user");
       
       const userDetails = response.data.data.users;
 
@@ -72,9 +68,12 @@ const MainProfileComponent = () => {
     }
   }, [profileImage, dispatch]);
 
+
+
+
   const postProfile = async () => {
     try {
-      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+      const response = await axios.get("https://server-streamora-1.onrender.com/api/streamora/user");
       const userDetails = response.data.data.users;
       
       const userIndex = userDetails.findIndex((each) => each.email === email);
@@ -87,7 +86,7 @@ const MainProfileComponent = () => {
         };
 
         await axios.patch(
-          `https://server-streamora.onrender.com/api/streamora/user/${userDetails[userIndex].id}`,
+          `https://server-streamora-1.onrender.com/api/streamora/user${userDetails[userIndex]._id}`,
           updatedUser
         );
       }
@@ -113,11 +112,11 @@ const MainProfileComponent = () => {
     }
   };
 
-  const deleteHandler = async () => { // Typo corrected from "delateHandler"
+  const deleteHandler = async () => { 
     try {
       const deleteIndex = userDetails.findIndex((each) => each.email === email);
       if (deleteIndex !== -1) {
-        await axios.delete(`https://server-streamora.onrender.com/api/streamora/user/${userDetails[deleteIndex].id}`);
+        await axios.delete(`https://server-streamora-1.onrender.com/api/streamora/user${userDetails[deleteIndex]._id}`);
         localStorage.clear();
         window.location.reload();
       } else {
@@ -129,8 +128,8 @@ const MainProfileComponent = () => {
   };
 
   const logOutHandler = () => {
-    localStorage.clear(); // Use localStorage in lowercase
-    navigate("/LogIn"); // Corrected navigation function
+    localStorage.clear(); 
+    navigate("/LogIn"); 
   };
 
   return (

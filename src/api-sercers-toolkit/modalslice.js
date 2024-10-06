@@ -4,11 +4,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const ModalSlice=createSlice({
     name:"ModalSlice",
     initialState:{
-        loading:false,
+        loading1:false,
     },
     reducers:{
         uploadFiles:(state,action)=>{
-            return {loading:action.payload}
+            return {loading1:action.payload}
         }
     }
 })

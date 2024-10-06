@@ -15,25 +15,23 @@ const CardComponent = () => {
   const [isShareVisible, setIsShareVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [userProfileUrl, setUserProfileUrl] = useState({});
-  const {userData}=useSelector((state)=>state.userDetailsData)
-  const { email } = JSON.parse(localStorage.getItem("userDetails"))|| {};
+
+  const { userData, loading } = useSelector((state) => state.userDetailsData);
+  const { email } = JSON.parse(localStorage.getItem("userDetails")) || {};
   const { ProfileChange } = useSelector((state) => state.profileData);
   const { cards } = useSelector((state) => state.favoritesData);
   const dispatch = useDispatch();
 
   useEffect(() => {
-          dispatch(fetchPromises());
-
+    dispatch(fetchPromises());
   }, [ProfileChange, dispatch]);
 
-
-  const urlData = userData.find((user) => user.email === email);
-
-  setUserProfileUrl(urlData);
-
-  console.log(userProfileUrl);
-  
-
+  useEffect(() => {
+    const urlData = userData?.find((user) => user.email === email);
+    if (urlData) {
+      setUserProfileUrl(urlData);
+    }
+  }, [userData, email]);
 
   const toggleLike = () => {
     setIsLike((prev) => !prev);
@@ -64,65 +62,70 @@ const CardComponent = () => {
 
   return (
     <div className="message-page-open">
-      {
-      userDetails ? (
-        userDetails.map((each, index) => (
-          <div key={index} className="Parent-card">
-            <div className="Child-Card">
-              <img src={each.profile_url || ""} alt="User Profile" />
-              <div>{each.name}</div>
-            </div>
-
-            {each.videos?.length > 0 && (
-              <div className="Child-Card video-container">
-                <video
-                  muted={isMuted}
-                  onMouseOver={(e) => e.target.play()}
-                  onMouseOut={(e) => e.target.pause()}
-                  className="video-player"
-                >
-                  <source src={each.videos[each.videos.length - 1].videoUrl} />
-                </video>
-
-                <Button
-                  className="mute-icon"
-                  onClick={toggleMute}
-                  icon={isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
-                />
-              </div>
-            )}
-
-            <div className="Child-Card-bottom">
-              <Button onClick={toggleLike}>
-                {isLike ? <FcLike /> : <FcLikePlaceholder />}
-              </Button>
-              <span>Likes: {likeCount}</span>
-              <Button onClick={toggleMessageVisibility}>Message</Button>
-              <Button onClick={toggleShareVisibility}>Share</Button>
-              <Button onClick={() => handleFavorite(each.videos[each.videos.length - 1].videoUrl)}>
-                {cards?.includes(each.videos[each.videos.length - 1]?.videoUrl) ? "Favorited" : "Favorite"}
-              </Button>
-            </div>
-
-            {isMessageVisible && (
-              <div className="message-section">
-                <h1>Message content...</h1>
-              </div>
-            )}
-            {isShareVisible && (
-              <div className="share-section">
-                <h1>Share content...</h1>
-              </div>
-            )}
-          </div>
-        ))
-      ) : (
+      {loading ? (
         <div className="skeleton-loader">
-          hello
-          <Skeleton count={3} height={100} style={{ marginBottom: '10px', border:"2px solid" }} />
+          <Skeleton count={3} height={100} style={{ marginBottom: '10px', border: "2px solid" }} />
           <Skeleton count={1} height={200} />
           <Skeleton count={2} height={30} />
         </div>
+      ) : (
+        userData && userData.length > 0 ? (
+          userData.map((each, index) => (
+            <div key={index} className="Parent-card">
+              <div className="Child-Card">
+                <img src={each.profile_url || ""} alt="User Profile" />
+                <div>{each.name}</div>
+              </div>
+
+              {each.videos?.length > 0 && each.videos[each.videos.length - 1].video_url && (
+                <div className="Child-Card video-container">
+                  <video
+                    muted={isMuted}
+                    onMouseOver={(e) => e.target.play()}
+                    onMouseOut={(e) => e.target.pause()}
+                    className="video-player"
+                  >
+                    {/* Updated to use 'video_url' */}
+                    <source src={each.videos[each.videos.length - 1].video_url} type="video/mp4" />
+                  </video>
+
+                  <Button
+                    className="mute-icon"
+                    onClick={toggleMute}
+                    icon={isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
+                  />
+                </div>
+              )}
+
+              <div className="Child-Card-bottom">
+                <Button onClick={toggleLike}>
+                  {isLike ? <FcLike /> : <FcLikePlaceholder />}
+                </Button>
+                <span>Likes: {likeCount}</span>
+                <Button onClick={toggleMessageVisibility}>Message</Button>
+                <Button onClick={toggleShareVisibility}>Share</Button>
+                {each.videos?.length > 0 && (
+                  <Button onClick={() => handleFavorite(each.videos[each.videos.length - 1].video_url)}>
+                    {cards?.includes(each.videos[each.videos.length - 1]?.video_url) ? "Favorited" : "Favorite"}
+                  </Button>
+                )}
+              </div>
+
+              {isMessageVisible && (
+                <div className="message-section">
+                  <h1>Message content...</h1>
+                </div>
+              )}
+              {isShareVisible && (
+                <div className="share-section">
+                  <h1>Share content...</h1>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <div>No user data available.</div>
+        )
       )}
     </div>
   );

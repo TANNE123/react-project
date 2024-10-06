@@ -5,15 +5,17 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { uploadFiles } from "../../api-sercers-toolkit/modalslice";
 import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { notify } from "../js-handlers/reguler-expression";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { fetchPromises } from "../../api-sercers-toolkit/apiSlice";
 
 const UploadComponent = () => {
   const navigator = useNavigate();
   const fileInputRef = useRef(null);
   const imageInputRef = useRef(null);
-  const { loading } = useSelector((state) => state.loadingData);
+  const { loading1 } = useSelector((state) => state.loadingData);
+  const { userData, loading } = useSelector((state) => state.userDetailsData);
+
   const dispatch = useDispatch();
 
   const [videoUpload, setVideoUpload] = useState({
@@ -32,16 +34,20 @@ const UploadComponent = () => {
   const { email } = JSON.parse(localStorage.getItem("userDetails")) || {};
 
   useEffect(() => {
-    if (videoUpload.video_url) { 
+    if (videoUpload.video_url) {
       videoUrlPost();
     }
   }, [videoUpload]);
 
   useEffect(() => {
-    if (imageUpload.image_url) { 
+    if (imageUpload.image_url) {
       imageUrlPost();
     }
   }, [imageUpload]);
+
+  useEffect(() => {
+    dispatch(fetchPromises()); // Fetch data on mount
+  }, [dispatch]);
 
   const handleOk = () => {
     navigator("/");
@@ -49,7 +55,7 @@ const UploadComponent = () => {
   };
 
   const showModalHandler = () => {
-    dispatch(uploadFiles(!loading));
+    dispatch(uploadFiles(!loading1));
   };
 
   const handleCancel = () => {
@@ -64,45 +70,41 @@ const UploadComponent = () => {
   const onVideoFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setVideoUpload((prevState) => ({
-          ...prevState,
-          video_url: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
+      const videoUrl = URL.createObjectURL(file); // Create a URL for the video file
+      setVideoUpload((prevState) => ({
+        ...prevState,
+        video_url: videoUrl, // Use the generated URL
+      }));
     }
   };
 
   const videoUrlPost = async () => {
     try {
-      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
-      const userDetails = response.data.data.users;
+      if (!userData || userData.length === 0) {
+        console.error("No user data available for video upload.");
+        return;
+      }
 
-      const findIndex = userDetails.findIndex((each) => each.email === email);
+      const findIndex = userData.findIndex((each) => each.email === email);
 
       if (findIndex !== -1) {
-        const updatedVideos = [...userDetails[findIndex].videos, videoUpload];
+        const updatedVideos = [...userData[findIndex].videos, videoUpload]; // Append new video
         const updatedUser = {
-          ...userDetails[findIndex],
+          ...userData[findIndex],
           videos: updatedVideos,
         };
 
-        // Debugging logs
-        console.log("Patching user ID:", userDetails[findIndex]._id);
-        console.log("User data to patch:", updatedUser);
-
         const patchResponse = await axios.patch(
-          `https://server-streamora.onrender.com/api/streamora/user/${userDetails[findIndex]._id}`,
+          `https://server-streamora.onrender.com/api/streamora/user/${userData[findIndex]._id}`,
           updatedUser
         );
 
-        // Log patch response
-        console.log("Patch response:", patchResponse.data);
+        console.log("Patch response for video:", patchResponse.data);
+        toast.success("Video uploaded successfully");
       }
     } catch (err) {
       console.error("Error uploading video:", err.response ? err.response.data : err.message);
+      toast.error("Error uploading video");
     }
   };
 
@@ -113,45 +115,41 @@ const UploadComponent = () => {
   const onImageFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageUpload((prevState) => ({
-          ...prevState,
-          image_url: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
+      const imageUrl = URL.createObjectURL(file); // Create a URL for the image file
+      setImageUpload((prevState) => ({
+        ...prevState,
+        image_url: imageUrl, // Use the generated URL
+      }));
     }
   };
 
   const imageUrlPost = async () => {
     try {
-      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
-      const userDetails = response.data.data.users;
+      if (!userData || userData.length === 0) {
+        console.error("No user data available for image upload.");
+        return;
+      }
 
-      const findIndex = userDetails.findIndex((each) => each.email === email);
+      const findIndex = userData.findIndex((each) => each.email === email);
 
       if (findIndex !== -1) {
-        const updatedImages = [...userDetails[findIndex].images, imageUpload];
+        const updatedImages = [...userData[findIndex].images, imageUpload]; // Append new image
         const updatedUser = {
-          ...userDetails[findIndex],
+          ...userData[findIndex],
           images: updatedImages,
         };
 
-        // Debugging logs
-        console.log("Patching user ID:", userDetails[findIndex]._id);
-        console.log("User data to patch:", updatedUser);
-
         const patchResponse = await axios.patch(
-          `https://server-streamora.onrender.com/api/streamora/user/${userDetails[findIndex]._id}`,
+          `https://server-streamora.onrender.com/api/streamora/user/${userData[findIndex]._id}`,
           updatedUser
         );
 
-        // Log patch response
-        console.log("Patch response:", patchResponse.data);
+        console.log("Patch response for image:", patchResponse.data);
+        toast.success("Image uploaded successfully");
       }
     } catch (err) {
       console.error("Error uploading image:", err.response ? err.response.data : err.message);
+      toast.error("Error uploading image");
     }
   };
 
@@ -159,7 +157,7 @@ const UploadComponent = () => {
     <>
       <Modal
         title="Upload"
-        open={loading}
+        open={loading1}
         onOk={handleOk}
         onCancel={handleCancel}
         okText="Confirm"
