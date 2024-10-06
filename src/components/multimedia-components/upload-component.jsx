@@ -46,7 +46,7 @@ const UploadComponent = () => {
   }, [imageUpload]);
 
   useEffect(() => {
-    dispatch(fetchPromises()); // Fetch data on mount
+    dispatch(fetchPromises()); 
   }, [dispatch]);
 
   const handleOk = () => {
@@ -70,11 +70,14 @@ const UploadComponent = () => {
   const onVideoFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const videoUrl = URL.createObjectURL(file); // Create a URL for the video file
-      setVideoUpload((prevState) => ({
-        ...prevState,
-        video_url: videoUrl, // Use the generated URL
-      }));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setVideoUpload((prevState) => ({
+          ...prevState,
+          video_url: reader.result, 
+        }));
+      };
+      reader.readAsDataURL(file); 
     }
   };
 
@@ -88,18 +91,17 @@ const UploadComponent = () => {
       const findIndex = userData.findIndex((each) => each.email === email);
 
       if (findIndex !== -1) {
-        const updatedVideos = [...userData[findIndex].videos, videoUpload]; // Append new video
+        const updatedVideos = [...userData[findIndex].videos, videoUpload]; 
         const updatedUser = {
           ...userData[findIndex],
           videos: updatedVideos,
         };
 
-        const patchResponse = await axios.patch(
-          `https://server-streamora.onrender.com/api/streamora/user/${userData[findIndex]._id}`,
+        await axios.patch(
+          `https://streamora-userdata.onrender.com/userDetails/${userData[findIndex].id}`,
           updatedUser
         );
 
-        console.log("Patch response for video:", patchResponse.data);
         toast.success("Video uploaded successfully");
       }
     } catch (err) {
@@ -115,11 +117,14 @@ const UploadComponent = () => {
   const onImageFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file); // Create a URL for the image file
-      setImageUpload((prevState) => ({
-        ...prevState,
-        image_url: imageUrl, // Use the generated URL
-      }));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUpload((prevState) => ({
+          ...prevState,
+          image_url: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file); 
     }
   };
 
@@ -133,18 +138,16 @@ const UploadComponent = () => {
       const findIndex = userData.findIndex((each) => each.email === email);
 
       if (findIndex !== -1) {
-        const updatedImages = [...userData[findIndex].images, imageUpload]; // Append new image
+        const updatedImages = [...userData[findIndex].images, imageUpload]; 
         const updatedUser = {
           ...userData[findIndex],
           images: updatedImages,
         };
 
         const patchResponse = await axios.patch(
-          `https://server-streamora.onrender.com/api/streamora/user/${userData[findIndex]._id}`,
+          `https://streamora-userdata.onrender.com/userDetails/${userData[findIndex].id}`,
           updatedUser
         );
-
-        console.log("Patch response for image:", patchResponse.data);
         toast.success("Image uploaded successfully");
       }
     } catch (err) {

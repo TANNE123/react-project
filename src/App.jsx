@@ -14,6 +14,7 @@ import { NavLink, Outlet } from "react-router-dom";
 
 import logo from "..//public/project-Logo.png";
 import ProfileComponent from "./components/multimedia-components/profile-component";
+import { useSelector } from "react-redux";
 
 const { Header, Sider, Content } = Layout;
 
@@ -21,6 +22,8 @@ const App = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const {currentTheme,colors }= useSelector((state) => state.ThemesSlicesData);
+
 
   const handleResize = () => {
     if (window.innerWidth <= 700) {
@@ -40,9 +43,9 @@ const App = () => {
   }, []);
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh",  }}>
       {/* Header/Navbar */}
-      <Header className="header">
+      <Header className="header" style={{...colors[currentTheme] }}>
         <div>
           <div>
             <NavLink to="/" className="NavLink">
@@ -78,7 +81,8 @@ const App = () => {
         <Sider
           width={250}
           collapsed={collapsed}
-          style={{ display: collapsed && isMobile ? "none" : "block" }}
+          style={{ display: collapsed && isMobile ? "none" : "block" , ...colors[currentTheme]}}
+          className="nav-bar-said-card"
         >
           <div className="said-nav-bar">
             <div>
@@ -114,7 +118,7 @@ const App = () => {
         <Layout>
           <Content
             className="Main-Content-Area"
-            style={{ padding: "80px 16px 24px 16px" }}
+            style={{ padding: "80px 16px 24px 16px"}}
           >
             <Outlet />
           </Content>

@@ -5,6 +5,7 @@ import loadingRedux from "./modalslice"
 import signUpRedux from "./singupslice"
 import profileRedux from "./profileslice"
 import userDetailsRedux from "./apiSlice"
+import ThemesSlicesRedux from "./themesslices"
 
 
 
@@ -15,6 +16,7 @@ export const reduxStore=configureStore({
         loadingData:loadingRedux,
         signUpData:signUpRedux,
         profileData:profileRedux,
-        userDetailsData:userDetailsRedux
+        userDetailsData:userDetailsRedux,
+        ThemesSlicesData:ThemesSlicesRedux
     }
 })

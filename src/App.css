@@ -11,7 +11,8 @@
   position: fixed;
   z-index: 1;
   width: 100%;
-  border: 1px solid;
+  background-color: #fbeee6;
+
   /* padding: 0 10px 0 5px; */
 
   div {
@@ -57,41 +58,35 @@
   transition: all 0.3s ease-in-out;
   /* border: 10px solid pink; */
 }
-
+.nav-bar-said-card {
+  background-color: #d0ece7 ;
+}
 .said-nav-bar {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
   font-size: 18px;
   padding: 20px;
-  /* border: 1px solid green; */
-
 }
 
 .said-nav-bar div {
   padding: 15px 0;
   width: 110px;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
-  /* border: 1px solid red; */
-
-  
 }
 
 .said-nav-bar div label {
   padding-left: 10px;
   font-size: 20px;
-
 }
 
 .said-nav-bar div .active {
   color: red;
 }
-.upload-nav{
+.upload-nav {
   font-size: 20px;
   position: fixed;
   bottom: 100px;
@@ -106,7 +101,6 @@
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
-  border: 1px solid red;
 }
 
 /* Media Queries */
@@ -126,22 +120,18 @@
       margin-left: 20px;
     }
   }
-  
+
   .said-nav-bar {
     padding: 10px;
-  
   }
 
   .said-nav-bar div {
     justify-content: left;
     align-items: left;
-    /* border: 1px solid red; */
-  
-    
   }
 
   .ant-layout-sider {
-    display: none; 
+    display: none;
     width: 100vw;
   }
 
@@ -166,10 +156,19 @@
   padding: 20px;
   z-index: 2;
 }
+.profile-details{
+  div{
+    font-size: 20px;
+    label{
+      font-size: 20px;
+      padding: 10px;
+    }
+  }
+}
 .profile-div {
   font-size: 20px;
   label {
-    font-size: 20px;
+    font-size: 20px !important;
     padding: 10px;
   }
 }
@@ -184,7 +183,7 @@
   }
 
   .ant-layout-sider {
-    width: 200px; 
+    width: 200px;
   }
 }
 

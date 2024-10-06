@@ -23,8 +23,25 @@
     height: 200px;
     // border: 1px solid;
 }
+//Themes-card-style__________________________________________________________
 
 
+
+.themes-cord{
+    display: flex;
+    flex-direction: column;
+    button{
+        padding: 5px 20px;
+        margin: 3px;
+        font-size: 20px;
+        border: none;
+        border-radius: 20px;
+
+    }
+    button:hover{
+        opacity: 0.5;
+    }
+}
 
 // ___________________________________________________________
 

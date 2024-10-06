@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPromises } from "../api-sercers-toolkit/apiSlice";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
-import { addFavorite, removeFavorite } from "../api-sercers-toolkit/favoritesslice";
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';  
+import {
+  addFavorite,
+  removeFavorite,
+} from "../api-sercers-toolkit/favoritesslice";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const CardComponent = () => {
   const [isLike, setIsLike] = useState(false);
@@ -64,20 +67,20 @@ const CardComponent = () => {
     <div className="message-page-open">
       {loading ? (
         <div className="skeleton-loader">
-          <Skeleton count={3} height={100} style={{ marginBottom: '10px', border: "2px solid" }} />
-          <Skeleton count={1} height={200} />
-          <Skeleton count={2} height={30} />
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Skeleton key={index} count={3} height={20} />
+          ))}
         </div>
-      ) : (
-        userData && userData.length > 0 ? (
-          userData.map((each, index) => (
-            <div key={index} className="Parent-card">
-              <div className="Child-Card">
-                <img src={each.profile_url || ""} alt="User Profile" />
-                <div>{each.name}</div>
-              </div>
+      ) : userData && userData.length > 0 ? (
+        userData.map((each, index) => (
+          <div key={index} className="Parent-card">
+            <div className="Child-Card">
+              <img src={each.profile_url || ""} alt="User Profile" />
+              <div>{each.name}</div>
+            </div>
 
-              {each.videos?.length > 0 && each.videos[each.videos.length - 1].video_url && (
+            {each.videos?.length > 0 &&
+              each.videos[each.videos.length - 1].video_url && (
                 <div className="Child-Card video-container">
                   <video
                     muted={isMuted}
@@ -85,8 +88,10 @@ const CardComponent = () => {
                     onMouseOut={(e) => e.target.pause()}
                     className="video-player"
                   >
-                    {/* Updated to use 'video_url' */}
-                    <source src={each.videos[each.videos.length - 1].video_url} type="video/mp4" />
+                    <source
+                      src={each.videos[each.videos.length - 1].video_url}
+                      type="video/mp4"
+                    />
                   </video>
 
                   <Button
@@ -97,35 +102,44 @@ const CardComponent = () => {
                 </div>
               )}
 
-              <div className="Child-Card-bottom">
-                <Button onClick={toggleLike}>
-                  {isLike ? <FcLike /> : <FcLikePlaceholder />}
+            <div className="Child-Card-bottom">
+              <Button onClick={toggleLike}>
+                {isLike ? <FcLike /> : <FcLikePlaceholder />}
+              </Button>
+              <span>Likes: {likeCount}</span>
+              <Button onClick={toggleMessageVisibility}>Message</Button>
+              <Button onClick={toggleShareVisibility}>Share</Button>
+              {each.videos?.length > 0 && (
+                <Button
+                  onClick={() =>
+                    handleFavorite(
+                      each.videos[each.videos.length - 1].video_url
+                    )
+                  }
+                >
+                  {cards?.includes(
+                    each.videos[each.videos.length - 1]?.video_url
+                  )
+                    ? "Favorited"
+                    : "Favorite"}
                 </Button>
-                <span>Likes: {likeCount}</span>
-                <Button onClick={toggleMessageVisibility}>Message</Button>
-                <Button onClick={toggleShareVisibility}>Share</Button>
-                {each.videos?.length > 0 && (
-                  <Button onClick={() => handleFavorite(each.videos[each.videos.length - 1].video_url)}>
-                    {cards?.includes(each.videos[each.videos.length - 1]?.video_url) ? "Favorited" : "Favorite"}
-                  </Button>
-                )}
-              </div>
-
-              {isMessageVisible && (
-                <div className="message-section">
-                  <h1>Message content...</h1>
-                </div>
-              )}
-              {isShareVisible && (
-                <div className="share-section">
-                  <h1>Share content...</h1>
-                </div>
               )}
             </div>
-          ))
-        ) : (
-          <div>No user data available.</div>
-        )
+
+            {isMessageVisible && (
+              <div className="message-section">
+                <h1>Message content...</h1>
+              </div>
+            )}
+            {isShareVisible && (
+              <div className="share-section">
+                <h1>Share content...</h1>
+              </div>
+            )}
+          </div>
+        ))
+      ) : (
+        <div>No user data available.</div>
       )}
     </div>
   );

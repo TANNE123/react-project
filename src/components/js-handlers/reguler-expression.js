@@ -35,9 +35,9 @@ export const notifyWarning = (message) => {
 
 export const fetchData = async () => {
   try {
-    const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+    const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
     if (response.status === 200) {
-      return response.data.data.users; 
+      return response.data; 
     } else {
       console.error(`Error: Received status code ${response.status}`);
       return null; 

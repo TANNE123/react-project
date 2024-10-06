@@ -9,25 +9,24 @@ import { useNavigate } from "react-router-dom";
 
 const MainProfileComponent = () => {
   const { email } = JSON.parse(localStorage.getItem("userDetails")) || {};
-  const [userData, setUserData] = useState(null);
+  const [userData1, setUserData] = useState(null);
   const [videos, setVideos] = useState([]); 
   const [images, setImages] = useState([]); 
   const fileInputRef = useRef(null);
   const [profileImage, setProfileImage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate(); 
-  
-  const { userDetails } = useSelector((state) => state.userDetailsData);
 
-console.log(userDetails);
-
+  const { userData, loading } = useSelector((state) => state.userDetailsData);
 
   useEffect(() => {
     userFetch();
     const fetchUserData = async () => {
       const responseData = await fetchData();
+      
       if (responseData) {
         const checkingData = responseData.find((each) => each.email === email);
+        console.log(checkingData.videos);
         setVideos(checkingData?.videos || []);  
         setImages(checkingData?.images || []); 
       } else {
@@ -40,15 +39,10 @@ console.log(userDetails);
     }
   }, [dispatch, email]); 
 
-
-
-
   const userFetch = async () => {
     try {
-      const response = await axios.get("https://server-streamora-1.onrender.com/api/streamora/user");
-      
-      const userDetails = response.data.data.users;
-
+      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
+      const userDetails = response.data;
      
       
       const user = userDetails.find((each) => each.email === email);
@@ -57,38 +51,37 @@ console.log(userDetails);
         setProfileImage(user.profile_url);
       }
     } catch (err) {
-      console.error("Error fetching user data:", err); // More descriptive error
+      console.error("Error fetching user data:", err); 
     }
   };
 
   useEffect(() => {
     if (profileImage) {
       postProfile();
-      dispatch(profileHandler(profileImage));  // Dispatch after image update
+      dispatch(profileHandler(profileImage));  
     }
   }, [profileImage, dispatch]);
 
-
-
-
   const postProfile = async () => {
     try {
-      const response = await axios.get("https://server-streamora-1.onrender.com/api/streamora/user");
-      const userDetails = response.data.data.users;
-      
+      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
+
+      const userDetails =response.data;
       const userIndex = userDetails.findIndex((each) => each.email === email);
       
-      
       if (userIndex !== -1) {
+        const userId = userDetails[userIndex].id;
         const updatedUser = {
           ...userDetails[userIndex],
           profile_url: profileImage,
         };
 
         await axios.patch(
-          `https://server-streamora-1.onrender.com/api/streamora/user${userDetails[userIndex]._id}`,
+          `https://streamora-userdata.onrender.com/userDetails/${userId}`,
           updatedUser
         );
+      } else {
+        console.error("User not found");
       }
     } catch (err) {
       console.error("Error updating user profile:", err);
@@ -114,13 +107,17 @@ console.log(userDetails);
 
   const deleteHandler = async () => { 
     try {
-      const deleteIndex = userDetails.findIndex((each) => each.email === email);
-      if (deleteIndex !== -1) {
-        await axios.delete(`https://server-streamora-1.onrender.com/api/streamora/user${userDetails[deleteIndex]._id}`);
-        localStorage.clear();
-        window.location.reload();
+      if (userData) {
+        const deleteIndex = userData.findIndex((each) => each.email === email);
+        if (deleteIndex !== -1) {
+          await axios.delete(`https://streamora-userdata.onrender.com/userDetails/${userData[deleteIndex].id}`);
+          localStorage.clear();
+          window.location.reload();
+        } else {
+          notifyError("Account not found");
+        }
       } else {
-        notifyError("Account not found");
+        console.error("User data is not available for deletion.");
       }
     } catch (err) {
       console.error("Error deleting user account:", err);
@@ -132,13 +129,15 @@ console.log(userDetails);
     navigate("/LogIn"); 
   };
 
+// videos.map(each=>console.log(each.video_url))
+
   return (
     <>
       <div className="profile-data">
         <div className="profile-div">
           <div>
             <img
-              src={profileImage || userData?.profile_url || ""}
+              src={profileImage || userData1?.profile_url || ""}
               alt="Profile"
               onClick={handleImageClick}
               style={{ cursor: "pointer", width: "100px", height: "100px" }}
@@ -151,31 +150,34 @@ console.log(userDetails);
               accept="image/*"
             />
           </div>
-          <div>{userData ? userData.name : "Loading..."}</div>
+          <div>{userData1 ? userData1.name : "Loading..."}</div>
           <Button onClick={deleteHandler}>Delete account</Button>
           <Button onClick={logOutHandler}>Log out</Button>
         </div>
         <hr />
         
         <div className="post-div">
-          <div>Videos: {videos.length}</div> {/* Consistent use of videos state */}
-          <div>Images: {images.length}</div> {/* Consistent use of images state */}
+          <div>Videos: {videos.length}</div> 
+          <div>Images: {images.length}</div>
         </div>
 
         <div className="post-div-video-image">
           <div className="video-div">
             {videos.length > 0 ? (
-              videos.map((eachVideo, i) => (
-                <div key={i}>
-                  {eachVideo.videoUrl ? (
-                    <video controls>
-                      <source src={eachVideo.videoUrl} type="video/mp4" />
-                    </video>
-                  ) : (
-                    <div>No video URL</div>
-                  )}
-                </div>
-              ))
+              videos.map((eachVideo, i) => {
+                return (
+                  <div key={i}>
+                    {eachVideo.video_url ? (
+                      <video controls width="320" height="240"> 
+                        <source src={eachVideo.video_url} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <div>No video URL available</div>
+                    )}
+                  </div>
+                );
+              })
             ) : (
               <div>No videos available</div>
             )}
@@ -188,7 +190,7 @@ console.log(userDetails);
                   {eachImage.imageUrl ? (
                     <img src={eachImage.imageUrl} alt={`Uploaded ${i}`} />
                   ) : (
-                    <div>No image URL</div>
+                    <div>No image URL available</div>
                   )}
                 </div>
               ))

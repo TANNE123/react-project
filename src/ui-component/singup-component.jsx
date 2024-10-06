@@ -23,8 +23,8 @@ const SignUPComponent = () => {
   const navigation = useNavigate();
   const { singUpLoading } = useSelector((state) => state.signUpData);
 
-  const {userData}=useSelector((state)=>state.userDetailsData)
-  const dispatch=useDispatch()
+  const { userData } = useSelector((state) => state.userDetailsData);
+  const dispatch = useDispatch();
 
   const [userDetails, setDetails] = useState({
     name: "",
@@ -37,12 +37,11 @@ const SignUPComponent = () => {
   const [errorForm, setErrorForm] = useState({});
   const [otp, SetOtp] = useState("");
 
-  useEffect(()=>{
-    if(dispatch){
-      dispatch(fetchPromises())
+  useEffect(() => {
+    if (dispatch) {
+      dispatch(fetchPromises());
     }
-  },[dispatch])
-  
+  }, [dispatch]);
 
   const handleOk = async () => {
     if (
@@ -52,21 +51,25 @@ const SignUPComponent = () => {
       userDetails.email
     ) {
       try {
-        const response = userData.find(each=>each.email ==userDetails.email)
-        console.log(response);
-        
+        const response = userData.find(
+          (each) => each.email == userDetails.email
+        );
+
         if (response) {
           notifyError("User already registered with this email.");
         } else {
-          await axios.post("https://server-streamora.onrender.com/api/streamora/user/", { 
-            profile_url: "",
-            name: userDetails.name,
-            email: userDetails.email,
-            password: userDetails.password,
-            number: userDetails.number,
-            videos: [],
-            images: [],
-          });
+          await axios.post(
+            "https://streamora-userdata.onrender.com/userDetails",
+            {
+              profile_url: "",
+              name: userDetails.name,
+              email: userDetails.email,
+              password: userDetails.password,
+              number: userDetails.number,
+              videos: [],
+              images: [],
+            }
+          );
 
           const userData = {
             name: userDetails.name,
@@ -184,7 +187,9 @@ const SignUPComponent = () => {
               autoComplete="email"
             />
           </div>
-          {errorForm.email && <div style={{ color: "red" }}>{errorForm.email}</div>}
+          {errorForm.email && (
+            <div style={{ color: "red" }}>{errorForm.email}</div>
+          )}
         </div>
 
         <div className="input-container">
@@ -224,7 +229,12 @@ const SignUPComponent = () => {
         <div className="input-container">
           <div>
             <RiKey2Line />
-            <input type="text" value={otp} readOnly placeholder="Generate OTP" />
+            <input
+              type="text"
+              value={otp}
+              readOnly
+              placeholder="Generate OTP"
+            />
           </div>
         </div>
 

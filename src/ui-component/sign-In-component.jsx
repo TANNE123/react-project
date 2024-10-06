@@ -18,9 +18,11 @@ const SingInComponent = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+      const response = await axios.get(
+        "https://streamora-userdata.onrender.com/userDetails"
+      );
 
-      const user = response.data.data.users.find((user) => user.email === userData.email);
+      const user = response.data.find((user) => user.email === userData.email);
 
       if (user) {
         if (user.password === userData.password) {
@@ -28,7 +30,7 @@ const SingInComponent = () => {
             email: userData.email,
           };
           navigation("/");
-          localStorage.setItem("userDetails", JSON.stringify(newEmail|| ""));
+          localStorage.setItem("userDetails", JSON.stringify(newEmail || ""));
         } else {
           toast.error("Password is incorrect!");
         }
