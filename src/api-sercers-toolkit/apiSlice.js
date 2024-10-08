@@ -2,10 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchPromises = createAsyncThunk("fakeStore", async () => {
-  const finalData = await axios.get("https://streamora-userdata.onrender.com/userDetails");
+  const finalData = await axios.get("https://server-streamora-1.onrender.com/api/streamora/user");
 
+  console.log(finalData.data.data.users);
   
-  return finalData.data;
+  return finalData.data.data.users;
 });
 
 const productSlice = createSlice({

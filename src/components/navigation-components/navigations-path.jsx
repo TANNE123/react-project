@@ -23,18 +23,6 @@ const NavigationComponent = () => {
   const { singUpLoading } = useSelector((state) => state.signUpData);
 
 
-
-  useEffect(()=>{
-   const b= async()=>{
-     const a=await axios.get("https://server-streamora.onrender.com/api/streamora/user/")
-     console.log(a.data.data.users,"hello");
-     
-    }
-
-    b()
-
-  },[])
-
   useEffect(() => {
     if(!email){
       dispatch(SingUPHandler(true));

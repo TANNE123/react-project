@@ -109,18 +109,21 @@ const UploadComponent = () => {
       const findIndex = userData.findIndex((each) => each.email === email);
 
       if (findIndex !== -1) {
-        const updatedVideos = [...userData[findIndex].videos, videoUpload];
+        const updatedVideos = [...(userData[findIndex].videos || []), videoUpload];
         const updatedUser = {
           ...userData[findIndex],
           videos: updatedVideos,
         };
 
-        console.log(updatedUser, "hello");
-
-        await axios.put(
-          `https://streamora-userdata.onrender.com/userDetails/${userData[findIndex].id}`,
-          updatedUser
+                
+       const a= await axios.patch(
+          `https://server-streamora-1.onrender.com/api/streamora/user${userData[findIndex]._id}`,
+          {
+            videos:updatedUser.videos
+          }
         );
+
+console.log(a);
 
         toast.success("Video uploaded successfully");
       }
@@ -185,8 +188,8 @@ const UploadComponent = () => {
 
         console.log(updatedUser);
 
-        const patchResponse = await axios.put(
-          `https://streamora-userdata.onrender.com/userDetails/${userData[findIndex].id}`,
+        const patchResponse = await axios.put( 
+          `https://server-streamora.onrender.com/api/streamora/user/${userData[findIndex]._id}`,
           updatedUser
         );
         toast.success("Image uploaded successfully");

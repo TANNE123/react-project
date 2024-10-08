@@ -60,7 +60,7 @@ const SignUPComponent = () => {
           notifyError("User already registered with this email.");
         } else {
           await axios.post(
-            "https://streamora-userdata.onrender.com/userDetails",
+            "https://server-streamora.onrender.com/api/streamora/user/",
             {
               profile_url: "",
               name: userDetails.name,

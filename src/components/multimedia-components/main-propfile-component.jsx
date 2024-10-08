@@ -43,8 +43,8 @@ const MainProfileComponent = () => {
 
   const userFetch = async () => {
     try {
-      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
-      const userDetails = response.data;
+      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+      const userDetails = response.data.data.users;
      
       
       const user = userDetails.find((each) => each.email === email);
@@ -66,20 +66,20 @@ const MainProfileComponent = () => {
 
   const postProfile = async () => {
     try {
-      const response = await axios.get("https://streamora-userdata.onrender.com/userDetails");
+      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
 
-      const userDetails =response.data;
+      const userDetails =response.data.data.users;
       const userIndex = userDetails.findIndex((each) => each.email === email);
       
       if (userIndex !== -1) {
-        const userId = userDetails[userIndex].id;
+        const userId = userDetails[userIndex]._id;
         const updatedUser = {
           ...userDetails[userIndex],
           profile_url: profileImage,
         };
 
         await axios.put(
-          `https://streamora-userdata.onrender.com/userDetails/${userId}`,
+          `https://server-streamora.onrender.com/api/streamora/user/${userId}`,
           updatedUser
         );
       } else {
@@ -118,18 +118,6 @@ const MainProfileComponent = () => {
       }
     }
 
-
-    // setImageUpload((prevState) => ({
-    //   ...prevState,
-    //   image_url: String(secure_url),
-    // }));
-    // if (file) {
-    //   const reader = new FileReader();
-    //   reader.onloadend = () => {
-    //     
-    //   };
-    //   reader.readAsDataURL(file);
-    // }
   };
 
   const handleImageClick = () => {
@@ -143,7 +131,7 @@ const MainProfileComponent = () => {
       if (userData) {
         const deleteIndex = userData.findIndex((each) => each.email === email);
         if (deleteIndex !== -1) {
-          await axios.delete(`https://streamora-userdata.onrender.com/userDetails/${userData[deleteIndex].id}`);
+          await axios.delete(`https://server-streamora.onrender.com/api/streamora/user/${userData[deleteIndex]._id}`);
           localStorage.clear();
           window.location.reload();
         } else {
