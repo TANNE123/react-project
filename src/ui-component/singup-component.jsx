@@ -44,6 +44,7 @@ const SignUPComponent = () => {
   }, [dispatch]);
 
   const handleOk = async () => {
+    
     if (
       userDetails.name &&
       userDetails.number &&
@@ -91,6 +92,7 @@ const SignUPComponent = () => {
   };
 
   const handleCancel = () => {
+ 
     navigation("/SignIn");
   };
 

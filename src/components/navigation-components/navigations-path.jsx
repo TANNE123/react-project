@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SingUPHandler } from "../../api-sercers-toolkit/singupslice";
 import SignUPComponent from "../../ui-component/singup-component";
+import axios from "axios";
 
 const NavigationComponent = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,18 @@ const NavigationComponent = () => {
   
   const { singUpLoading } = useSelector((state) => state.signUpData);
 
+
+
+  useEffect(()=>{
+   const b= async()=>{
+     const a=await axios.get("https://server-streamora.onrender.com/api/streamora/user/")
+     console.log(a.data.data.users,"hello");
+     
+    }
+
+    b()
+
+  },[])
 
   useEffect(() => {
     if(!email){

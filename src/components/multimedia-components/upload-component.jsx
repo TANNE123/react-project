@@ -9,6 +9,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchPromises } from "../../api-sercers-toolkit/apiSlice";
 
+const CLOUDINARY_UPLOAD_PRESET = "dwyjrls6r";
+const cloudnaryApi = "https://api.cloudinary.com/v1_1/dwyjrls6r/video/upload";
+const cloudnaryApiImage ="https://api.cloudinary.com/v1_1/dwyjrls6r/image/upload";
+
 const UploadComponent = () => {
   const navigator = useNavigate();
   const fileInputRef = useRef(null);
@@ -46,7 +50,7 @@ const UploadComponent = () => {
   }, [imageUpload]);
 
   useEffect(() => {
-    dispatch(fetchPromises()); 
+    dispatch(fetchPromises());
   }, [dispatch]);
 
   const handleOk = () => {
@@ -67,17 +71,31 @@ const UploadComponent = () => {
     fileInputRef.current.click();
   };
 
-  const onVideoFileChange = (e) => {
+  const onVideoFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "videos_preset");
+      formData.append("resource_type", "video");
+      try {
+        const res = await axios.post(cloudnaryApi, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        const { secure_url } = res.data;
         setVideoUpload((prevState) => ({
           ...prevState,
-          video_url: reader.result, 
+          video_url: String(secure_url),
         }));
-      };
-      reader.readAsDataURL(file); 
+      } catch (error) {
+        console.error(
+          "Upload error:",
+          error.response ? error.response.data : error.message
+        );
+        toast.error("Error uploading video");
+      }
     }
   };
 
@@ -91,13 +109,15 @@ const UploadComponent = () => {
       const findIndex = userData.findIndex((each) => each.email === email);
 
       if (findIndex !== -1) {
-        const updatedVideos = [...userData[findIndex].videos, videoUpload]; 
+        const updatedVideos = [...userData[findIndex].videos, videoUpload];
         const updatedUser = {
           ...userData[findIndex],
           videos: updatedVideos,
         };
 
-        await axios.patch(
+        console.log(updatedUser, "hello");
+
+        await axios.put(
           `https://streamora-userdata.onrender.com/userDetails/${userData[findIndex].id}`,
           updatedUser
         );
@@ -105,7 +125,10 @@ const UploadComponent = () => {
         toast.success("Video uploaded successfully");
       }
     } catch (err) {
-      console.error("Error uploading video:", err.response ? err.response.data : err.message);
+      console.error(
+        "Error uploading video:",
+        err.response ? err.response.data : err.message
+      );
       toast.error("Error uploading video");
     }
   };
@@ -114,17 +137,33 @@ const UploadComponent = () => {
     imageInputRef.current.click();
   };
 
-  const onImageFileChange = (e) => {
+  const onImageFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "images_preset");
+      formData.append("resource_type", "image");
+
+      console.log(formData);
+
+      try {
+        const res = await axios.post(cloudnaryApiImage, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        const { secure_url } = res.data;
         setImageUpload((prevState) => ({
           ...prevState,
-          image_url: reader.result,
+          image_url: String(secure_url),
         }));
-      };
-      reader.readAsDataURL(file); 
+        console.log("Image uploaded successfully:", secure_url);
+      } catch (error) {
+        console.error(error);
+        toast.error("Error uploading image");
+      }
     }
   };
 
@@ -138,20 +177,25 @@ const UploadComponent = () => {
       const findIndex = userData.findIndex((each) => each.email === email);
 
       if (findIndex !== -1) {
-        const updatedImages = [...userData[findIndex].images, imageUpload]; 
+        const updatedImages = [...userData[findIndex].images, imageUpload];
         const updatedUser = {
           ...userData[findIndex],
           images: updatedImages,
         };
 
-        const patchResponse = await axios.patch(
+        console.log(updatedUser);
+
+        const patchResponse = await axios.put(
           `https://streamora-userdata.onrender.com/userDetails/${userData[findIndex].id}`,
           updatedUser
         );
         toast.success("Image uploaded successfully");
       }
     } catch (err) {
-      console.error("Error uploading image:", err.response ? err.response.data : err.message);
+      console.error(
+        "Error uploading image:",
+        err.response ? err.response.data : err.message
+      );
       toast.error("Error uploading image");
     }
   };

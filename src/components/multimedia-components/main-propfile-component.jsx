@@ -17,6 +17,9 @@ const MainProfileComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); 
 
+  const cloudnaryApiImage ="https://api.cloudinary.com/v1_1/dwyjrls6r/image/upload";
+
+
   const { userData, loading } = useSelector((state) => state.userDetailsData);
 
   useEffect(() => {
@@ -26,7 +29,6 @@ const MainProfileComponent = () => {
       
       if (responseData) {
         const checkingData = responseData.find((each) => each.email === email);
-        console.log(checkingData.videos);
         setVideos(checkingData?.videos || []);  
         setImages(checkingData?.images || []); 
       } else {
@@ -76,7 +78,7 @@ const MainProfileComponent = () => {
           profile_url: profileImage,
         };
 
-        await axios.patch(
+        await axios.put(
           `https://streamora-userdata.onrender.com/userDetails/${userId}`,
           updatedUser
         );
@@ -88,15 +90,46 @@ const MainProfileComponent = () => {
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async(e) => {
     const file = e.target.files[0];
+
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "images_preset");
+      formData.append("resource_type", "image");
+
+      console.log(formData);
+
+      try {
+        const res = await axios.post(cloudnaryApiImage, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        const { secure_url } = res.data;
+        setProfileImage(String(secure_url));
+        
+        console.log("Image uploaded successfully:", secure_url);
+      } catch (error) {
+        console.error(error);
+        toast.error("Error uploading image");
+      }
     }
+
+
+    // setImageUpload((prevState) => ({
+    //   ...prevState,
+    //   image_url: String(secure_url),
+    // }));
+    // if (file) {
+    //   const reader = new FileReader();
+    //   reader.onloadend = () => {
+    //     
+    //   };
+    //   reader.readAsDataURL(file);
+    // }
   };
 
   const handleImageClick = () => {
@@ -185,10 +218,10 @@ const MainProfileComponent = () => {
 
           <div className="image-div">
             {images.length > 0 ? (
-              images.map((eachImage, i) => (
+              images.map((eachImage, i) => (  
                 <div key={i}>
-                  {eachImage.imageUrl ? (
-                    <img src={eachImage.imageUrl} alt={`Uploaded ${i}`} />
+                  {eachImage.image_url ? (
+                    <img src={eachImage.image_url} alt={`Uploaded ${i}`} />
                   ) : (
                     <div>No image URL available</div>
                   )}
