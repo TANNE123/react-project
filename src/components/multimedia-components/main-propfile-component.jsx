@@ -10,15 +10,15 @@ import { useNavigate } from "react-router-dom";
 const MainProfileComponent = () => {
   const { email } = JSON.parse(localStorage.getItem("userDetails")) || {};
   const [userData1, setUserData] = useState(null);
-  const [videos, setVideos] = useState([]); 
-  const [images, setImages] = useState([]); 
+  const [videos, setVideos] = useState([]);
+  const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
   const [profileImage, setProfileImage] = useState("");
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const cloudnaryApiImage ="https://api.cloudinary.com/v1_1/dwyjrls6r/image/upload";
-
+  const cloudnaryApiImage =
+    "https://api.cloudinary.com/v1_1/dwyjrls6r/image/upload";
 
   const { userData, loading } = useSelector((state) => state.userDetailsData);
 
@@ -26,11 +26,11 @@ const MainProfileComponent = () => {
     userFetch();
     const fetchUserData = async () => {
       const responseData = await fetchData();
-      
+
       if (responseData) {
         const checkingData = responseData.find((each) => each.email === email);
-        setVideos(checkingData?.videos || []);  
-        setImages(checkingData?.images || []); 
+        setVideos(checkingData?.videos || []);
+        setImages(checkingData?.images || []);
       } else {
         console.error("Failed to fetch data.");
       }
@@ -39,38 +39,41 @@ const MainProfileComponent = () => {
     if (dispatch) {
       dispatch(fetchPromises());
     }
-  }, [dispatch, email]); 
+  }, [dispatch, email]);
 
   const userFetch = async () => {
     try {
-      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+      const response = await axios.get(
+        "https://server-streamora-2.onrender.com/api/streamora/user/"
+      );
       const userDetails = response.data.data.users;
-     
-      
+
       const user = userDetails.find((each) => each.email === email);
       setUserData(user);
       if (user) {
         setProfileImage(user.profile_url);
       }
     } catch (err) {
-      console.error("Error fetching user data:", err); 
+      console.error("Error fetching user data:", err);
     }
   };
 
   useEffect(() => {
     if (profileImage) {
       postProfile();
-      dispatch(profileHandler(profileImage));  
+      dispatch(profileHandler(profileImage));
     }
   }, [profileImage, dispatch]);
 
   const postProfile = async () => {
     try {
-      const response = await axios.get("https://server-streamora.onrender.com/api/streamora/user/");
+      const response = await axios.get(
+        "https://server-streamora-2.onrender.com/api/streamora/user/"
+      );
 
-      const userDetails =response.data.data.users;
+      const userDetails = response.data.data.users;
       const userIndex = userDetails.findIndex((each) => each.email === email);
-      
+
       if (userIndex !== -1) {
         const userId = userDetails[userIndex]._id;
         const updatedUser = {
@@ -79,7 +82,7 @@ const MainProfileComponent = () => {
         };
 
         await axios.put(
-          `https://server-streamora.onrender.com/api/streamora/user/${userId}`,
+          `https://server-streamora-2.onrender.com/api/streamora/user/${userId}`,
           updatedUser
         );
       } else {
@@ -90,7 +93,7 @@ const MainProfileComponent = () => {
     }
   };
 
-  const handleFileChange = async(e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
 
     if (file) {
@@ -98,8 +101,6 @@ const MainProfileComponent = () => {
       formData.append("file", file);
       formData.append("upload_preset", "images_preset");
       formData.append("resource_type", "image");
-
-      console.log(formData);
 
       try {
         const res = await axios.post(cloudnaryApiImage, formData, {
@@ -110,14 +111,11 @@ const MainProfileComponent = () => {
 
         const { secure_url } = res.data;
         setProfileImage(String(secure_url));
-        
-        console.log("Image uploaded successfully:", secure_url);
       } catch (error) {
         console.error(error);
         toast.error("Error uploading image");
       }
     }
-
   };
 
   const handleImageClick = () => {
@@ -126,12 +124,14 @@ const MainProfileComponent = () => {
     }
   };
 
-  const deleteHandler = async () => { 
+  const deleteHandler = async () => {
     try {
       if (userData) {
         const deleteIndex = userData.findIndex((each) => each.email === email);
         if (deleteIndex !== -1) {
-          await axios.delete(`https://server-streamora.onrender.com/api/streamora/user/${userData[deleteIndex]._id}`);
+          await axios.delete(
+            `https://server-streamora-2.onrender.com/api/streamora/user/${userData[deleteIndex]._id}`
+          );
           localStorage.clear();
           window.location.reload();
         } else {
@@ -146,11 +146,9 @@ const MainProfileComponent = () => {
   };
 
   const logOutHandler = () => {
-    localStorage.clear(); 
-    navigate("/LogIn"); 
+    localStorage.clear();
+    navigate("/LogIn");
   };
-
-// videos.map(each=>console.log(each.video_url))
 
   return (
     <>
@@ -159,7 +157,7 @@ const MainProfileComponent = () => {
           <div>
             <img
               src={profileImage || userData1?.profile_url || ""}
-              alt="Profile"
+              alt=""
               onClick={handleImageClick}
               style={{ cursor: "pointer", width: "100px", height: "100px" }}
             />
@@ -171,14 +169,14 @@ const MainProfileComponent = () => {
               accept="image/*"
             />
           </div>
-          <div>{userData1 ? userData1.name : "Loading..."}</div>
+          <div className="button-div">{userData1 ? userData1.name : "Loading..."}</div>
           <Button onClick={deleteHandler}>Delete account</Button>
           <Button onClick={logOutHandler}>Log out</Button>
         </div>
         <hr />
-        
+
         <div className="post-div">
-          <div>Videos: {videos.length}</div> 
+          <div>Videos: {videos.length}</div>
           <div>Images: {images.length}</div>
         </div>
 
@@ -189,7 +187,7 @@ const MainProfileComponent = () => {
                 return (
                   <div key={i}>
                     {eachVideo.video_url ? (
-                      <video controls width="320" height="240"> 
+                      <video controls width="320" height="240">
                         <source src={eachVideo.video_url} type="video/mp4" />
                         Your browser does not support the video tag.
                       </video>
@@ -206,7 +204,7 @@ const MainProfileComponent = () => {
 
           <div className="image-div">
             {images.length > 0 ? (
-              images.map((eachImage, i) => (  
+              images.map((eachImage, i) => (
                 <div key={i}>
                   {eachImage.image_url ? (
                     <img src={eachImage.image_url} alt={`Uploaded ${i}`} />

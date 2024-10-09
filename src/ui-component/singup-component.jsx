@@ -44,7 +44,6 @@ const SignUPComponent = () => {
   }, [dispatch]);
 
   const handleOk = async () => {
-    
     if (
       userDetails.name &&
       userDetails.number &&
@@ -60,7 +59,7 @@ const SignUPComponent = () => {
           notifyError("User already registered with this email.");
         } else {
           await axios.post(
-            "https://server-streamora.onrender.com/api/streamora/user/",
+            "https://server-streamora-2.onrender.com/api/streamora/user/",
             {
               profile_url: "",
               name: userDetails.name,
@@ -92,7 +91,6 @@ const SignUPComponent = () => {
   };
 
   const handleCancel = () => {
- 
     navigation("/SignIn");
   };
 

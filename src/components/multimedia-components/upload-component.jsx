@@ -11,7 +11,8 @@ import { fetchPromises } from "../../api-sercers-toolkit/apiSlice";
 
 const CLOUDINARY_UPLOAD_PRESET = "dwyjrls6r";
 const cloudnaryApi = "https://api.cloudinary.com/v1_1/dwyjrls6r/video/upload";
-const cloudnaryApiImage ="https://api.cloudinary.com/v1_1/dwyjrls6r/image/upload";
+const cloudnaryApiImage =
+  "https://api.cloudinary.com/v1_1/dwyjrls6r/image/upload";
 
 const UploadComponent = () => {
   const navigator = useNavigate();
@@ -37,7 +38,7 @@ const UploadComponent = () => {
 
   const { email } = JSON.parse(localStorage.getItem("userDetails")) || {};
 
-  useEffect(() => {
+  useEffect(() => { 
     if (videoUpload.video_url) {
       videoUrlPost();
     }
@@ -109,21 +110,19 @@ const UploadComponent = () => {
       const findIndex = userData.findIndex((each) => each.email === email);
 
       if (findIndex !== -1) {
-        const updatedVideos = [...(userData[findIndex].videos || []), videoUpload];
+        const updatedVideos = [
+          ...(userData[findIndex].videos || []),
+          videoUpload,
+        ];
         const updatedUser = {
           ...userData[findIndex],
           videos: updatedVideos,
         };
 
-                
-       const a= await axios.patch(
-          `https://server-streamora-1.onrender.com/api/streamora/user${userData[findIndex]._id}`,
-          {
-            videos:updatedUser.videos
-          }
+        await axios.put(
+          `https://server-streamora-2.onrender.com/api/streamora/user/${userData[findIndex]._id}`,
+          updatedUser
         );
-
-console.log(a);
 
         toast.success("Video uploaded successfully");
       }
@@ -148,8 +147,6 @@ console.log(a);
       formData.append("upload_preset", "images_preset");
       formData.append("resource_type", "image");
 
-      console.log(formData);
-
       try {
         const res = await axios.post(cloudnaryApiImage, formData, {
           headers: {
@@ -162,7 +159,6 @@ console.log(a);
           ...prevState,
           image_url: String(secure_url),
         }));
-        console.log("Image uploaded successfully:", secure_url);
       } catch (error) {
         console.error(error);
         toast.error("Error uploading image");
@@ -186,10 +182,8 @@ console.log(a);
           images: updatedImages,
         };
 
-        console.log(updatedUser);
-
-        const patchResponse = await axios.put( 
-          `https://server-streamora.onrender.com/api/streamora/user/${userData[findIndex]._id}`,
+        const patchResponse = await axios.put(
+          `https://server-streamora-2.onrender.com/api/streamora/user/${userData[findIndex]._id}`,
           updatedUser
         );
         toast.success("Image uploaded successfully");
@@ -238,7 +232,7 @@ console.log(a);
           Upload
         </NavLink>
       </div>
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </>
   );
 };

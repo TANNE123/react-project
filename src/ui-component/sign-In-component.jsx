@@ -19,10 +19,12 @@ const SingInComponent = () => {
 
     try {
       const response = await axios.get(
-        "https://server-streamora.onrender.com/api/streamora/user/"
+        "https://server-streamora-2.onrender.com/api/streamora/user/"
       );
 
-      const user = response.data.data.users.find((user) => user.email === userData.email);
+      const user = response.data.data.users.find(
+        (user) => user.email === userData.email
+      );
 
       if (user) {
         if (user.password === userData.password) {

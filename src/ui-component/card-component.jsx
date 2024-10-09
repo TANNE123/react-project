@@ -81,6 +81,7 @@ const CardComponent = () => {
 
             {each.videos?.length > 0 &&
               each.videos[each.videos.length - 1].video_url && (
+                <>
                 <div className="Child-Card video-container">
                   <video
                     muted={isMuted}
@@ -100,9 +101,8 @@ const CardComponent = () => {
                     icon={isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
                   />
                 </div>
-              )}
 
-            <div className="Child-Card-bottom">
+                <div className="Child-Card-bottom">
               <Button onClick={toggleLike}>
                 {isLike ? <FcLike /> : <FcLikePlaceholder />}
               </Button>
@@ -125,6 +125,11 @@ const CardComponent = () => {
                 </Button>
               )}
             </div>
+
+                </>
+              )}
+
+           
 
             {isMessageVisible && (
               <div className="message-section">

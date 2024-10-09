@@ -26,7 +26,7 @@ const App = () => {
 
 
   const handleResize = () => {
-    if (window.innerWidth <= 700) {
+    if (window.innerWidth <= 900) {
       setIsMobile(true);
       setCollapsed(true);
     } else {

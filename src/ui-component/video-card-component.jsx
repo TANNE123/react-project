@@ -15,7 +15,6 @@ const VideoComponentCard = () => {
 
   let videoArr = [];
   let imageArr = [];
- 
 
   userData.forEach((each) => {
     if (each.videos) {
