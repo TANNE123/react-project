@@ -4,11 +4,9 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadFiles } from "../../api-sercers-toolkit/modalslice";
 
-
 const HomeComponent = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.loadingData);
-
 
   const showModalHandler = () => {
     dispatch(uploadFiles(!loading));

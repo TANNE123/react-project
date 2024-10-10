@@ -11,7 +11,7 @@
   position: fixed;
   z-index: 1;
   width: 100%;
-  background-color: #fbeee6;
+  background-color: #d1f2eb;
 
   /* padding: 0 10px 0 5px; */
 
@@ -52,15 +52,13 @@
 
 /* Sidebar */
 .ant-layout-sider {
-  background-color: #fff;
   padding-top: 64px;
   width: 250px;
   transition: all 0.3s ease-in-out;
-  /* border: 10px solid pink; */
+  background:linear-gradient(90deg,#f9e79f,rgb(254, 185, 185)) ;
+
 }
-.nav-bar-said-card {
-  background-color: #d0ece7 ;
-}
+
 .said-nav-bar {
   width: 100%;
   display: flex;
@@ -72,25 +70,46 @@
 }
 
 .said-nav-bar div {
-  padding: 15px 0;
-  width: 110px;
+  padding: 15px 5px;
+  width: 140px;
   display: flex;
   align-items: center;
+  /* border: 1px solid red; */
+}
+
+.said-nav-bar div a:hover {
+  border-radius: 10px;
+  padding: 10px;
+  background-color: rgb(69, 69, 180);
+  color: #fff !important;
+  opacity: 0.9;
 }
 
 .said-nav-bar div label {
   padding-left: 10px;
   font-size: 20px;
+  cursor: pointer;
 }
 
 .said-nav-bar div .active {
   color: red;
+  cursor: pointer;
 }
 .upload-nav {
   font-size: 20px;
   position: fixed;
-  bottom: 100px;
-  right: 100px;
+  bottom: 50px;
+  right: 100px !important;
+  label{
+    cursor: pointer;
+  }
+}
+.upload-nav a:hover {
+  border-radius: 10px;
+  padding: 10px;
+  background-color: rgb(53, 53, 210);
+  color: #fff;
+  cursor:pointer;
 }
 
 /* Content Area */
@@ -101,6 +120,11 @@
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
+ 
+}
+
+.Main-Content-Area::-webkit-scrollbar{
+  display: none;
 }
 
 /* Media Queries */
@@ -150,19 +174,31 @@
   position: fixed;
   top: 64px;
   right: 0;
-  width: 250px;
+  width: 220px;
+  height: 150px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   z-index: 2;
+
 }
-.profile-details{
-  div{
+.profile-details {
+  div {
+   width: 135px !important;
     font-size: 20px;
-    label{
+    padding: 5px;
+    label {
       font-size: 20px;
       padding: 10px;
+      cursor: pointer;
+   
     }
+  }
+  div:hover{
+    box-shadow: 0 0 2px 1px rgb(20, 17, 17);
+    border-radius: 10px;
+    padding-left: 10px;
+    
   }
 }
 .profile-div {

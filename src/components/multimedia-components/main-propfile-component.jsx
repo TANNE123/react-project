@@ -146,8 +146,10 @@ const MainProfileComponent = () => {
   };
 
   const logOutHandler = () => {
-    localStorage.clear();
     navigate("/LogIn");
+    localStorage.clear();
+    window.location.reload()
+    
   };
 
   return (
@@ -169,7 +171,9 @@ const MainProfileComponent = () => {
               accept="image/*"
             />
           </div>
-          <div className="button-div">{userData1 ? userData1.name : "Loading..."}</div>
+          <div className="button-div">
+            {userData1 ? userData1.name : "Loading..."}
+          </div>
           <Button onClick={deleteHandler}>Delete account</Button>
           <Button onClick={logOutHandler}>Log out</Button>
         </div>

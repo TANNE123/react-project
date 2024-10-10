@@ -7,9 +7,9 @@ const SignUpSlice = createSlice({
   },
   reducers: {
     SingUPHandler: (state, action) => {
-      state.singUpLoading = action.payload; 
-    }
-  }
+      state.singUpLoading = action.payload;
+    },
+  },
 });
 
 export const { SingUPHandler } = SignUpSlice.actions;

@@ -7,29 +7,26 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { profileClose } from "../../api-sercers-toolkit/favoritesslice";
 
-
-
 const ProfileComponent = () => {
   const { profile } = useSelector((state) => state.favoritesData);
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
-
-const handleSignUpClick=()=>{
-  dispatch(profileClose(!profile));
-}
+  const handleSignUpClick = () => {
+    dispatch(profileClose(!profile));
+  };
   return (
     <div className="profile-details">
-      <div >
+      <div>
         <NavLink onClick={handleSignUpClick} to="/LogIn">
-        <UserAddOutlined />
-        <label>Sign-Up </label>
+          <UserAddOutlined />
+          <label>Sign-Up </label>
         </NavLink>
       </div>
 
-      <div >
-        <NavLink  onClick={handleSignUpClick} to="/SignIn">
-        <LoginOutlined />
-        <label>Sign-In</label>
+      <div>
+        <NavLink onClick={handleSignUpClick} to="/SignIn">
+          <LoginOutlined />
+          <label>Sign-In</label>
         </NavLink>
       </div>
 

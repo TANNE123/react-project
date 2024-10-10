@@ -14,7 +14,8 @@ import { NavLink, Outlet } from "react-router-dom";
 
 import logo from "..//public/project-Logo.png";
 import ProfileComponent from "./components/multimedia-components/profile-component";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPromises } from "./api-sercers-toolkit/apiSlice";
 
 const { Header, Sider, Content } = Layout;
 
@@ -22,8 +23,26 @@ const App = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const {currentTheme,colors }= useSelector((state) => state.ThemesSlicesData);
+  const { currentTheme, colors } = useSelector(
+    (state) => state.ThemesSlicesData
+  );
 
+
+  const { userData } = useSelector((state) => state.userDetailsData);
+
+  const { email } = JSON.parse(localStorage.getItem("userDetails")) || {};
+  const user = userData.filter((each) => each.email === email);
+  const _id = user[0]?._id || null;
+  
+  
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (dispatch) {
+      dispatch(fetchPromises());
+    }
+  }, [dispatch]);
 
   const handleResize = () => {
     if (window.innerWidth <= 900) {
@@ -43,9 +62,9 @@ const App = () => {
   }, []);
 
   return (
-    <Layout style={{ minHeight: "100vh",  }}>
+    <Layout style={{ minHeight: "100vh" }}>
       {/* Header/Navbar */}
-      <Header className="header" style={{...colors[currentTheme] }}>
+      <Header className="header">
         <div>
           <div>
             <NavLink to="/" className="NavLink">
@@ -62,7 +81,7 @@ const App = () => {
         </div>
         <div>
           <div className="profile-div">
-            <NavLink type="primary" to={`/live/${12345}`}>
+            <NavLink type="primary" to={`/live/${_id}`}>
               <VideoCameraOutlined />
               <label>Live</label>
             </NavLink>
@@ -81,7 +100,10 @@ const App = () => {
         <Sider
           width={250}
           collapsed={collapsed}
-          style={{ display: collapsed && isMobile ? "none" : "block" , ...colors[currentTheme]}}
+          style={{
+            display: collapsed && isMobile ? "none" : "block",
+            
+          }}
           className="nav-bar-said-card"
         >
           <div className="said-nav-bar">
@@ -118,7 +140,7 @@ const App = () => {
         <Layout>
           <Content
             className="Main-Content-Area"
-            style={{ padding: "80px 16px 24px 16px"}}
+            style={{ padding: "80px 16px 24px 16px", ...colors[currentTheme]}}
           >
             <Outlet />
           </Content>

@@ -9,14 +9,14 @@ import "../src/all-styles/videos-card.style.scss";
 import { Provider } from "react-redux";
 import { reduxStore } from "./api-sercers-toolkit/store.js";
 
-import 'react-loading-skeleton/dist/skeleton.css'
+import "react-loading-skeleton/dist/skeleton.css";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={reduxStore}>
-  <StrictMode>
-    <BrowserRouter>
-      <NavigationComponent />
-    </BrowserRouter>
-  </StrictMode>
+    <StrictMode>
+      <BrowserRouter>
+        <NavigationComponent />
+      </BrowserRouter>
+    </StrictMode>
   </Provider>
 );

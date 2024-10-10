@@ -16,20 +16,16 @@ import axios from "axios";
 
 const NavigationComponent = () => {
   const dispatch = useDispatch();
-  const navigation=useNavigate()
+  const navigation = useNavigate();
   const { email } = JSON.parse(localStorage.getItem("userDetails")) || {};
 
-  
   const { singUpLoading } = useSelector((state) => state.signUpData);
 
-
   useEffect(() => {
-    if(!email){
+    if (!email) {
       dispatch(SingUPHandler(true));
-      navigation("/LogIn")
+      navigation("/LogIn");
     }
-   
-      
   }, [dispatch]);
 
   return (
