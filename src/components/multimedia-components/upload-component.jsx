@@ -20,6 +20,7 @@ const UploadComponent = () => {
   const imageInputRef = useRef(null);
   const { loading1 } = useSelector((state) => state.loadingData);
   const { userData, loading } = useSelector((state) => state.userDetailsData);
+  const [isDisable,setIsDisable]=useState(true)
 
   const dispatch = useDispatch();
 
@@ -125,6 +126,8 @@ const UploadComponent = () => {
         );
 
         toast.success("Video uploaded successfully");
+
+        setIsDisable(false)
       }
     } catch (err) {
       console.error(
@@ -187,6 +190,7 @@ const UploadComponent = () => {
           updatedUser
         );
         toast.success("Image uploaded successfully");
+        setIsDisable(false)
       }
     } catch (err) {
       console.error(
@@ -203,6 +207,7 @@ const UploadComponent = () => {
         title="Upload"
         open={loading1}
         onOk={handleOk}
+        okButtonProps={{ disabled: isDisable }} 
         onCancel={handleCancel}
         okText="Confirm"
         cancelText="Cancel"

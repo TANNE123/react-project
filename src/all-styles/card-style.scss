@@ -8,6 +8,16 @@
   height: auto;
   padding-top: 40px;
   border: 1px solid #ddd;
+
+  .search_bar{
+    width: 400px;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 20px;
+    border-radius: 30px;
+    outline: none;
+    border: none;
+  }
 }
 .skeleton-loader {
   width: 100%;
@@ -140,10 +150,25 @@
   margin-top: 10px;
   border-radius: 5px;
   overflow-y: scroll;
+  h5{
+    padding: 3px;
+  }
+  input{
+    width: 95%;
+    font-size: 20px;
+    padding: 2px;
+    margin: 0px 10px 10px;
+    border-radius: 20px;
+    outline: none;
+  
+  }
 }
 
+
+
+
 .message-section {
-  height: auto;
+  height: 200px;
   overflow: none;
 }
 
@@ -175,12 +200,27 @@
     width: 90%;
     padding: 15px;
   }
+
+  .message-page-open {  
+    .search_bar{
+      width: 90%;
+      padding: 7px;
+      margin: 10px 0;
+      font-size: 20px;
+      border-radius: 30px;
+      outline: none;
+      border: none;
+    }
+  }
+
+  
 }
 
 @media only screen and (min-width: 576px) and (max-width: 900px) {
   .Parent-card {
     width: 80%;
   }
+ 
 }
 
 //favorites-card-style__________________________________________________________________
@@ -201,11 +241,12 @@
 .profile-data {
   width: 70%;
   height: 100%;
-  box-shadow: 0 0 1px 1px;
+  box-shadow: 0 0 2px 1px #847e7e;
   border-radius: 10px;
+  background-color: #f6f3f3;
 
-  .profile-div {
-    width: 500px;
+  .profile-div1 {
+    width: 100%;
     height: auto;
     display: flex;
     flex-direction: row;
@@ -213,6 +254,7 @@
     margin-top: 10px;
     padding: 0 10px;
     font-size: 30px;
+ 
 
     div {
       img {
@@ -274,14 +316,17 @@
       }
     }
   }
+  .post-div-video-image::-webkit-scrollbar{
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 576px) {
   .profile-data {
     width: 100%;
 
-    .profile-div {
-      width: 200px;
+    .profile-div1 {
+      width: 100%;
       height: auto;
       display: flex;
       flex-direction: row;
@@ -292,19 +337,29 @@
       div {
         font-size: 15px;
         img {
-          width: 80px;
-          height: 80px;
+          width: 50px !important;
+          height: 50px !important;
         }
       }
     }
   }
+
+
+
+  .profile-data .profile-div1 button {
+    font-size:20px; 
+    padding: 1px; 
+    margin: 10px;
 }
+}
+
+
 
 @media only screen and (min-width: 576px) and (max-width: 900px) {
   .profile-data {
     width: 100%;
 
-    .profile-div {
+    .profile-div1 {
       width: auto;
       height: 100px;
       display: flex;

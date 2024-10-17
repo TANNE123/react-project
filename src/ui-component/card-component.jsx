@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPromises } from "../api-sercers-toolkit/apiSlice";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
@@ -31,6 +31,8 @@ const CardComponent = () => {
     return savedComments ? JSON.parse(savedComments) : {};
   });
 
+  const [search, setSearch] = useState("");
+  const [userSearch, setUserSearch] = useState("");
 
   const { currentTheme, colors } = useSelector(
     (state) => state.ThemesSlicesData
@@ -57,7 +59,7 @@ const CardComponent = () => {
 
   const toggleLike = (index) => {
     if (isLike === index) {
-      setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
+      setLikeCount((prev) => (prev > 0 ? prev - 1 : 1));
       setIsLike(null);
     } else {
       setLikeCount((prev) => prev + 1);
@@ -72,6 +74,18 @@ const CardComponent = () => {
       dispatch(addFavorite(videoUrl));
     }
   };
+
+  const searchHandler = useCallback((e) => {
+    setSearch(e.target.value);
+  }, []);
+
+  const searchData = useMemo(() => {
+    return userData.filter((each) =>
+      each.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [userData, search]);
+
+  console.log(searchData);
 
   const toggleMessageVisibility = (index) => {
     setIsMessageVisible((prevIndex) => (prevIndex === index ? null : index));
@@ -96,6 +110,7 @@ const CardComponent = () => {
       return newComments;
     });
     setComment("");
+    setIsMessageVisible(null);
   };
 
   const toggleShareVisibility = (index) => {
@@ -111,143 +126,170 @@ const CardComponent = () => {
     console.log(targetId);
   };
 
+  const userSearchHandler = useCallback((e) => {
+    setUserSearch(e.target.value);
+  }, []);
+
+  const userSearchData = useMemo(() => {
+    return userData.filter((each) =>
+      each.name.toLowerCase().includes(userSearch.toLowerCase())
+    );
+  }, [userData, userSearch]);
+
   return (
-    <div className="message-page-open" style={{ ...colors[currentTheme] }}>
-      {loading ? (
-        <div className="skeleton-loader">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Skeleton key={index} count={3} height={20} />
-          ))}
-        </div>
-      ) : userData && userData.length > 0 ? (
-        userData
-          .slice()
-          .reverse()
-          .map((each, index) => (
-            <div key={index} className="Parent-card">
-              <div className="Child-Card">
-                <img src={each.profile_url || ""} alt="" />
-                <div>{each.name}</div>
-              </div>
+    <>
+      <div className="message-page-open" style={{ ...colors[currentTheme] }}>
+        <input
+          type="text"
+          className="search_bar"
+          value={search}
+          placeholder="Search"
+          onChange={searchHandler}
+        />
+        {loading ? (
+          <div className="skeleton-loader">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <Skeleton key={index} count={3} height={20} />
+            ))}
+          </div>
+        ) : searchData && searchData.length > 0 ? (
+          searchData
+            .slice()
+            .reverse()
+            .map((each, index) => (
+              <div key={index} className="Parent-card">
+                <div className="Child-Card">
+                  <img src={each.profile_url || ""} alt="" />
+                  <div>{each.name}</div>
+                </div>
 
-              {each.videos?.length > 0 &&
-                each.videos[each.videos.length - 1].video_url && (
-                  <>
-                    <div className="Child-Card video-container">
-                      <video
-                        muted={isMuted}
-                        onMouseOver={(e) => {
-                          if (e.target.paused) {
-                            e.target.play();
-                          }
-                        }}
-                        onMouseOut={(e) => {
-                          if (!e.target.paused) {
-                            e.target.pause();
-                          }
-                        }}
-                        className="video-player"
-                      >
-                        <source
-                          src={each.videos[each.videos.length - 1].video_url}
-                          type="video/mp4"
-                        />
-                      </video>
-
-                      <Button
-                        className="mute-icon"
-                        onClick={toggleMute}
-                        icon={isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
-                      />
-                    </div>
-
-                    <div className="Child-Card-bottom">
-                      <Button onClick={() => toggleLike(index)}>
-                        {isLike == index && isLike ? (
-                          <FcLike />
-                        ) : (
-                          <FcLikePlaceholder />
-                        )}
-                      </Button>
-                      <span>Likes: {likeCount}</span>
-
-                      <Button onClick={() => toggleMessageVisibility(index)}>
-                        comment
-                      </Button>
-                      <Button onClick={() => toggleShareVisibility(index)}>
-                        Share
-                      </Button>
-                      {each.videos?.length > 0 && (
-                        <Button
-                          onClick={() =>
-                            handleFavorite(
-                              each.videos[each.videos.length - 1].video_url
-                            )
-                          }
+                {each.videos?.length > 0 &&
+                  each.videos[each.videos.length - 1].video_url && (
+                    <>
+                      <div className="Child-Card video-container">
+                        <video
+                          muted={isMuted}
+                          onMouseOver={(e) => {
+                            if (e.target.paused) {
+                              e.target.play();
+                            }
+                          }}
+                          onMouseOut={(e) => {
+                            if (!e.target.paused) {
+                              e.target.pause();
+                            }
+                          }}
+                          className="video-player"
                         >
-                          {cards?.includes(
-                            each.videos[each.videos.length - 1]?.video_url
-                          )
-                            ? "Favorited"
-                            : "Favorite"}
-                        </Button>
-                      )}
-                    </div>
+                          <source
+                            src={each.videos[each.videos.length - 1].video_url}
+                            type="video/mp4"
+                          />
+                        </video>
 
-                    {isMessageVisible === index && (
-                      <div className="message-section">
-                        <div>
-                          {getDataLocal[index] &&
-                            getDataLocal[index].map(
-                              (eachComment, commentIndex) => (
-                                <p key={commentIndex}>{eachComment}</p>
+                        <Button
+                          className="mute-icon"
+                          onClick={toggleMute}
+                          icon={isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
+                        />
+                      </div>
+
+                      <div className="Child-Card-bottom">
+                        <Button onClick={() => toggleLike(index)}>
+                          {isLike == index && isLike ? (
+                            <FcLike />
+                          ) : (
+                            <FcLikePlaceholder />
+                          )}
+                        </Button>
+                        <span>Likes: {likeCount}</span>
+
+                        <Button onClick={() => toggleMessageVisibility(index)}>
+                          comment
+                        </Button>
+                        <Button onClick={() => toggleShareVisibility(index)}>
+                          Share
+                        </Button>
+                        {each.videos?.length > 0 && (
+                          <Button
+                            onClick={() =>
+                              handleFavorite(
+                                each.videos[each.videos.length - 1].video_url
                               )
-                            )}
+                            }
+                          >
+                            {cards?.includes(
+                              each.videos[each.videos.length - 1]?.video_url
+                            )
+                              ? "Favorited"
+                              : "Favorite"}
+                          </Button>
+                        )}
+                      </div>
+
+                      {isMessageVisible === index && (
+                        <div className="message-section">
+                          <div>
+                            {getDataLocal[index] &&
+                              getDataLocal[index].map(
+                                (eachComment, commentIndex) => (
+                                  <h5 key={commentIndex}>{eachComment}</h5>
+                                )
+                              )}
+                          </div>
+                          <div className="comment-box">
+                            <input
+                              type="text"
+                              placeholder="Add a comment"
+                              value={comment}
+                              onChange={commentHandler}
+                            />
+                            <button onClick={() => sendCommentHandler(index)}>
+                              send
+                            </button>
+                          </div>
                         </div>
-                        <div className="comment-box">
+                      )}
+
+                      {isShareVisible == index && (
+                        <div className="share-section">
                           <input
                             type="text"
-                            placeholder="Add a comment"
-                            value={comment}
-                            onChange={commentHandler}
+                            value={userSearch}
+                            onChange={userSearchHandler}
+                            placeholder="search the user Name"
                           />
-                          <button onClick={() => sendCommentHandler(index)}>
-                            send
-                          </button>
+                          {userSearchData
+                            .slice()
+                            .reverse()
+                            .map((each, index) => (
+                              <div key={index} className="share-card">
+                                <div className="Child-Card1">
+                                  <img src={each.profile_url || ""} alt="." />
+                                  <div>{each.name}</div>
+                                </div>
+                                <div className="radio-div">
+                                  <input
+                                    type="radio"
+                                    onClick={() => radioHandler(each._id)}
+                                  />
+                                </div>
+                              </div>
+                            ))}
                         </div>
-                      </div>
-                    )}
-
-                    {isShareVisible == index && (
-                      <div className="share-section">
-                        {userData
-                          .slice()
-                          .reverse()
-                          .map((each, index) => (
-                            <div key={index} className="share-card">
-                              <div className="Child-Card1">
-                                <img src={each.profile_url || ""} alt="." />
-                                <div>{each.name}</div>
-                              </div>
-                              <div className="radio-div">
-                                <input
-                                  type="radio"
-                                  onClick={() => radioHandler(each._id)}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                      </div>
-                    )}
-                  </>
+                      )}
+                    </>
+                  )}
+                {isShareVisible == index && (
+                  <SendOutlined className="sendIcon" />
                 )}
-              {isShareVisible == index && <SendOutlined className="sendIcon" />}
-            </div>
-          ))
-      ) : (
-        <div>No user data available.</div>
-      )}
-    </div>
+              </div>
+            ))
+        ) : (
+          <div>No user data available.</div>
+        )}
+      </div>
+    </>
   );
 };
 

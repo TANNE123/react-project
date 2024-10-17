@@ -155,7 +155,7 @@ const MainProfileComponent = () => {
   return (
     <>
       <div className="profile-data">
-        <div className="profile-div">
+        <div className="profile-div1">
           <div>
             <img
               src={profileImage || userData1?.profile_url || ""}
