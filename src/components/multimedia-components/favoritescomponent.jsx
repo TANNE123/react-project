@@ -7,8 +7,8 @@ const FavoritesComponent = () => {
 
   return (
     <div className="favorites-card">
-      {cards && cards.some(each => each) ? (
-        cards.map((each, i) => 
+      {cards && cards?.some(each => each) ? (
+        cards?.map((each, i) => 
           each ? <video key={i} controls src={each} /> : null
         )
       ) : (
