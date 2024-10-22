@@ -31,14 +31,14 @@ const ProfileComponent = () => {
       </div>
 
       <div>
-        <NavLink onClick={handleSignUpClick} to="/SignIn">
+        <NavLink  to="/SignIn">
           <LoginOutlined />
           <label>Sign-In</label>
         </NavLink>
       </div>
 
       <div>
-        <NavLink onClick={handleSignUpClick} to="/Profile">
+        <NavLink to="/Profile">
           <UserOutlined />
           <label>Profile </label>
         </NavLink>
