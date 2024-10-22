@@ -85,8 +85,6 @@ const CardComponent = () => {
     );
   }, [userData, search]);
 
-  console.log(searchData);
-
   const toggleMessageVisibility = (index) => {
     setIsMessageVisible((prevIndex) => (prevIndex === index ? null : index));
     setIsShareVisible(null);

@@ -22,7 +22,7 @@ const ThemesSlices = createSlice({
         color: "#070707",
       },
       default: {
-        background: "linear-gradient(45deg,#e8daef,#bb8fce)",
+        background: "#34495e",
         color: "#070707",
       },
     },

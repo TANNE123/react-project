@@ -55,8 +55,7 @@
   padding-top: 64px;
   width: 250px;
   transition: all 0.3s ease-in-out;
-  background:linear-gradient(90deg,#f9e79f,rgb(254, 185, 185)) ;
-
+background-color: #a9dfbf;
 }
 
 .said-nav-bar {
@@ -100,8 +99,13 @@
   position: fixed;
   bottom: 50px;
   right: 100px !important;
+  color: #fff;
   label{
     cursor: pointer;
+    color: #fff;
+  }
+  a{
+    color: #fff;
   }
 }
 .upload-nav a:hover {
