@@ -134,6 +134,7 @@ const MainProfileComponent = () => {
           );
           localStorage.clear();
           window.location.reload();
+          navigate("/LogIn");
         } else {
           notifyError("Account not found");
         }
