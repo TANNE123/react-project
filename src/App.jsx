@@ -81,7 +81,7 @@ const App = () => {
         </div>
         <div>
           <div className="profile-div">
-            <NavLink type="primary" to={`/live/${_id}`}>
+            <NavLink type="primary" to={`/live/12345`}>
               <VideoCameraOutlined />
               <label>Live</label>
             </NavLink>
