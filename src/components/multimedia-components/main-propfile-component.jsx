@@ -133,7 +133,6 @@ const MainProfileComponent = () => {
             `https://server-streamora-2.onrender.com/api/streamora/user/${userData[deleteIndex]._id}`
           );
           localStorage.clear();
-          window.location.reload();
           navigate("/LogIn");
         } else {
           notifyError("Account not found");
